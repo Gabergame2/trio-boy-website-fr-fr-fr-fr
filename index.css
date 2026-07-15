@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 18% 4%;
+    --foreground: 0 0% 100%;
+    --card: 220 15% 7%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 15% 7%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 183 100% 50%;
+    --primary-foreground: 220 18% 4%;
+    --secondary: 67 100% 50%;
+    --secondary-foreground: 220 18% 4%;
+    --muted: 220 10% 12%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 67 100% 50%;
+    --accent-foreground: 220 18% 4%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 10% 15%;
+    --input: 220 10% 15%;
+    --ring: 183 100% 50%;
+    --chart-1: 183 100% 50%;
+    --chart-2: 67 100% 50%;
+    --chart-3: 0 0% 100%;
+    --chart-4: 220 10% 55%;
+    --chart-5: 183 80% 40%;
+    --radius: 0.25rem;
+    --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --sidebar-background: 220 15% 7%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 183 100% 50%;
+    --sidebar-primary-foreground: 220 18% 4%;
+    --sidebar-accent: 220 10% 12%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 220 10% 15%;
+    --sidebar-ring: 183 100% 50%;
+  }
+
+  .dark {
+    --background: 220 18% 4%;
+    --foreground: 0 0% 100%;
+    --card: 220 15% 7%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 15% 7%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 183 100% 50%;
+    --primary-foreground: 220 18% 4%;
+    --secondary: 67 100% 50%;
+    --secondary-foreground: 220 18% 4%;
+    --muted: 220 10% 12%;
+    --muted-foreground: 220 10% 55%;
+    --accent: 67 100% 50%;
+    --accent-foreground: 220 18% 4%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 10% 15%;
+    --input: 220 10% 15%;
+    --ring: 183 100% 50%;
+    --chart-1: 183 100% 50%;
+    --chart-2: 67 100% 50%;
+    --chart-3: 0 0% 100%;
+    --chart-4: 220 10% 55%;
+    --chart-5: 183 80% 40%;
+    --sidebar-background: 220 15% 7%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 183 100% 50%;
+    --sidebar-primary-foreground: 220 18% 4%;
+    --sidebar-accent: 220 10% 12%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 220 10% 15%;
+    --sidebar-ring: 183 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(220 18% 4%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(183 100% 50% / 0.3);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(183 100% 50% / 0.6);
+}
+
+/* Glitch pulse animation */
+@keyframes glitch-pulse {
+  0%, 100% { opacity: 1; transform: translateX(0); }
+  25% { opacity: 0.8; transform: translateX(-2px); }
+  50% { opacity: 1; transform: translateX(1px); }
+  75% { opacity: 0.6; transform: translateX(-1px); }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-glitch-pulse {
+  animation: glitch-pulse 0.15s infinite;
+}
+
+.animate-scan-line {
+  animation: scan-line 4s linear infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Selection color */
+::selection {
+  background: hsl(183 100% 50% / 0.3);
+  color: white;
+}
