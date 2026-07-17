@@ -17,7 +17,7 @@ export default function Footer() {
           {/* Logo */}
           <div className="flex items-center">
             <img
-              src="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/e003c3074_1000012074.png"
+              src="/logo.png"
               alt="Trio Boys Logo"
               className="h-10 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
             />

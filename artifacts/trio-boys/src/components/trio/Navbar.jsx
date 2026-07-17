@@ -39,7 +39,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <button onClick={() => scrollTo("#hero")} className="flex items-center gap-2 group">
             <img
-              src="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/e003c3074_1000012074.png"
+              src="/logo.png"
               alt="Trio Boys Logo"
               className="h-12 w-auto object-contain group-hover:scale-110 transition-transform duration-300"
             />
