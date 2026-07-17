@@ -162,37 +162,37 @@ export default function ProjectSummer() {
               <DailyPhoto
                 name="Gabe"
                 day="Day 1"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/55dc5a1ad_PXL_20260627_1504127832.jpg"
+                image="/project-summer/day1.jpg"
                 delay={0.6}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 2"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/3860eee7c_PXL_20260629_022528061.jpg"
+                image="/project-summer/day2.jpg"
                 delay={0.7}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 3"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/8e5c97466_PXL_20260629_233024104.jpg"
+                image="/project-summer/day3.jpg"
                 delay={0.8}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 4"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/2c8e96232_PXL_20260630_211347082MP.jpg"
+                image="/project-summer/day4.jpg"
                 delay={0.9}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 5"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/142414c8e_PXL_20260701_193433772MP.jpg"
+                image="/project-summer/day5.jpg"
                 delay={1.0}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 6"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/30e085ec9_PXL_20260702_183019556MP.jpg"
+                image="/project-summer/day6.jpg"
                 delay={1.1}
               />
               <div className="sm:col-span-2 text-center py-6">
@@ -203,43 +203,43 @@ export default function ProjectSummer() {
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/8dee026a9_PXL_20260703_172909337MP.jpg"
+                image="/project-summer/day7.jpg"
                 delay={1.2}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/b17defeb4_PXL_20260703_164513803.jpg"
+                image="/project-summer/day8.jpg"
                 delay={1.25}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/d1649a2fb_PXL_20260703_172912078MP.jpg"
+                image="/project-summer/day9.jpg"
                 delay={1.3}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/b9a8afd28_PXL_20260703_160937532MP.jpg"
+                image="/project-summer/day10.jpg"
                 delay={1.35}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/3a74db386_PXL_20260703_191932902.jpg"
+                image="/project-summer/day11.jpg"
                 delay={1.4}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/0e9e8bfee_PXL_20260703_195954468.jpg"
+                image="/project-summer/day12.jpg"
                 delay={1.45}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
-                image="https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/9df0147f9_PXL_20260703_230946901MP.jpg"
+                image="/project-summer/day13.jpg"
                 delay={1.5}
               />
             </div>

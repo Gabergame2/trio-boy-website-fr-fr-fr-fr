@@ -8,7 +8,7 @@ import GlitchDivider from "./GlitchDivider";
 const VIDEOS = [
   {
     title: "WE SURVIVED 24 HOURS IN AN ABANDONED FACTORY",
-    thumbnail: "https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/ec14d1943_generated_728bda86.png",
+    thumbnail: "/videos/thumb1.png",
     views: "4.2M",
     duration: "28:14",
     category: "CHALLENGE",
@@ -16,7 +16,7 @@ const VIDEOS = [
   },
   {
     title: "EXTREME NIGHT CHALLENGE — WHO BREAKS FIRST?",
-    thumbnail: "https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/236d2be9e_generated_a37a354c.png",
+    thumbnail: "/videos/thumb2.png",
     views: "3.8M",
     duration: "22:07",
     category: "EXTREME",
@@ -24,7 +24,7 @@ const VIDEOS = [
   },
   {
     title: "THE STARE DOWN — TRIO BOYS EDITION",
-    thumbnail: "https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/edbbec220_generated_cc95369b.png",
+    thumbnail: "/videos/thumb3.png",
     views: "5.1M",
     duration: "15:32",
     category: "VIRAL",
@@ -32,7 +32,7 @@ const VIDEOS = [
   },
   {
     title: "BEHIND THE SCENES — HOW WE FILM EVERYTHING",
-    thumbnail: "https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/107ff504f_generated_469f5133.png",
+    thumbnail: "/videos/thumb4.png",
     views: "2.9M",
     duration: "18:45",
     category: "BTS",
@@ -40,7 +40,7 @@ const VIDEOS = [
   },
   {
     title: "WE SURVIVED 24 HOURS IN AN ABANDONED FACTORY PT.2",
-    thumbnail: "https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/ec14d1943_generated_728bda86.png",
+    thumbnail: "/videos/thumb1.png",
     views: "3.5M",
     duration: "31:20",
     category: "CHALLENGE",
