@@ -162,36 +162,42 @@ export default function ProjectSummer() {
               <DailyPhoto
                 name="Gabe"
                 day="Day 1"
+                date="June 27, 2026"
                 image="/project-summer/day1.jpg"
                 delay={0.6}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 2"
+                date="June 29, 2026"
                 image="/project-summer/day2.jpg"
                 delay={0.7}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 3"
+                date="June 29, 2026"
                 image="/project-summer/day3.jpg"
                 delay={0.8}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 4"
+                date="June 30, 2026"
                 image="/project-summer/day4.jpg"
                 delay={0.9}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 5"
+                date="July 1, 2026"
                 image="/project-summer/day5.jpg"
                 delay={1.0}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 6"
+                date="July 2, 2026"
                 image="/project-summer/day6.jpg"
                 delay={1.1}
               />
@@ -203,42 +209,49 @@ export default function ProjectSummer() {
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
+                date="July 3, 2026"
                 image="/project-summer/day7.jpg"
                 delay={1.2}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
+                date="July 3, 2026"
                 image="/project-summer/day8.jpg"
                 delay={1.25}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
+                date="July 3, 2026"
                 image="/project-summer/day9.jpg"
                 delay={1.3}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
+                date="July 3, 2026"
                 image="/project-summer/day10.jpg"
                 delay={1.35}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
+                date="July 3, 2026"
                 image="/project-summer/day11.jpg"
                 delay={1.4}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
+                date="July 3, 2026"
                 image="/project-summer/day12.jpg"
                 delay={1.45}
               />
               <DailyPhoto
                 name="Gabe"
                 day="Day 7"
+                date="July 3, 2026"
                 image="/project-summer/day13.jpg"
                 delay={1.5}
               />

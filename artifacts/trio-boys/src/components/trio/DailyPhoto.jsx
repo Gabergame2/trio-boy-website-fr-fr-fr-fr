@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 
-export default function DailyPhoto({ name, day, image, delay = 0.6 }) {
+export default function DailyPhoto({ name, day, date, image, delay = 0.6 }) {
   return (
     <motion.div
       className="max-w-md mx-auto"
@@ -33,6 +33,11 @@ export default function DailyPhoto({ name, day, image, delay = 0.6 }) {
         <p className="text-accent text-xs font-body tracking-[0.3em] uppercase mt-1">
           {day}
         </p>
+        {date && (
+          <p className="text-muted-foreground text-xs font-body tracking-widest mt-0.5">
+            {date}
+          </p>
+        )}
       </div>
     </motion.div>
   );
