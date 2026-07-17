@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Youtube, ExternalLink } from "lucide-react";
+import { Menu, X, Youtube } from "lucide-react";
+import { useJelly } from "@/lib/JellyContext";
 
 const NAV_ITEMS = [
   { label: "THE BOYS", href: "#hero" },
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { activate } = useJelly();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -24,6 +25,11 @@ export default function Navbar() {
     setIsOpen(false);
     const el = document.querySelector(href);
     el?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const activateJelly = () => {
+    setIsOpen(false);
+    activate();
   };
 
   return (
@@ -99,6 +105,7 @@ export default function Navbar() {
                 {item.label}
               </motion.button>
             ))}
+
             <motion.a
               href="https://youtube.com"
               target="_blank"
@@ -111,6 +118,18 @@ export default function Navbar() {
               <Youtube className="w-5 h-5" />
               SUBSCRIBE
             </motion.a>
+
+            {/* ── Invisible ink secret button ── */}
+            <motion.button
+              onClick={activateJelly}
+              className="invisible-ink-btn mt-6 text-xs tracking-[0.4em] font-body uppercase select-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              title=""
+            >
+              🍮 jelly mode
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>

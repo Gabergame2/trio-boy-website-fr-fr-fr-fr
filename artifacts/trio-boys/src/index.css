@@ -149,6 +149,12 @@
   to { height: 0; }
 }
 
+@keyframes jelly-wobble {
+  0%, 100% { transform: skewX(0deg) skewY(0deg) scale(1); }
+  25%       { transform: skewX(0.4deg) skewY(0.15deg) scale(1.002); }
+  75%       { transform: skewX(-0.3deg) skewY(-0.1deg) scale(0.999); }
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -157,5 +163,28 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
+  }
+
+  /* Jelly mode — sections gently wobble */
+  body.jelly-active section {
+    animation: jelly-wobble 1.8s ease-in-out infinite;
+  }
+  body.jelly-active section:nth-child(2) { animation-delay: 0.3s; }
+  body.jelly-active section:nth-child(3) { animation-delay: 0.6s; }
+  body.jelly-active section:nth-child(4) { animation-delay: 0.9s; }
+  body.jelly-active section:nth-child(5) { animation-delay: 1.2s; }
+
+  /* Invisible ink button — hidden until hovered/focused */
+  .invisible-ink-btn {
+    color: transparent;
+    text-shadow: none;
+    cursor: default;
+    transition: color 0.8s ease, text-shadow 0.8s ease;
+  }
+  .invisible-ink-btn:hover,
+  .invisible-ink-btn:focus {
+    color: hsl(var(--primary));
+    text-shadow: 0 0 12px hsl(var(--primary)), 0 0 28px hsl(var(--primary) / 0.5);
+    cursor: pointer;
   }
 }
