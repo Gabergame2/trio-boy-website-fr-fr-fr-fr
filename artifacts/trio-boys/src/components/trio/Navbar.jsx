@@ -13,7 +13,7 @@ const NAV_ITEMS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { activate } = useJelly();
+  const { activate, activateScreen } = useJelly();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -30,6 +30,11 @@ export default function Navbar() {
   const activateJelly = () => {
     setIsOpen(false);
     activate();
+  };
+
+  const activateJellyScreen = () => {
+    setIsOpen(false);
+    activateScreen();
   };
 
   return (
@@ -119,16 +124,26 @@ export default function Navbar() {
               SUBSCRIBE
             </motion.a>
 
-            {/* ── Invisible ink secret button ── */}
+            {/* ── Secret #1: jelly blob game ── */}
             <motion.button
               onClick={activateJelly}
-              className="invisible-ink-btn mt-6 text-xs tracking-[0.4em] font-body uppercase select-none"
+              className="invisible-ink-btn mt-4 text-xs tracking-[0.4em] font-body uppercase select-none"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              title=""
+              transition={{ delay: 0.55 }}
             >
               🍮 jelly mode
+            </motion.button>
+
+            {/* ── Secret #2: jelly screen effect ── */}
+            <motion.button
+              onClick={activateJellyScreen}
+              className="invisible-ink-btn text-xs tracking-[0.4em] font-body uppercase select-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.65 }}
+            >
+              🫧 "jelly mode"
             </motion.button>
           </motion.div>
         )}

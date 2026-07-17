@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { queryClientInstance } from '@/lib/query-client';
 import { JellyProvider } from '@/lib/JellyContext';
 import JellyMode from '@/components/JellyMode';
+import JellyScreen from '@/components/JellyScreen';
 import Home from '@/pages/Home';
 import ProjectSummer from '@/pages/ProjectSummer';
 import PageNotFound from '@/lib/PageNotFound';
@@ -22,6 +23,7 @@ function App() {
           </Routes>
         </BrowserRouter>
         <JellyMode />
+        <JellyScreen />
         <Toaster />
       </JellyProvider>
     </QueryClientProvider>
