@@ -55,7 +55,7 @@ export default function ProjectSummer() {
               be the biggest season yet (duh cuz we haven't posted yet)
               challenges, collabs, and content you will believe because the
               production value is LOW! Also, daily photos showcasing the Trio
-              Boys Summer!
+              Boys Summer! (Mostly Gabe because he does all of this computer work :)
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
