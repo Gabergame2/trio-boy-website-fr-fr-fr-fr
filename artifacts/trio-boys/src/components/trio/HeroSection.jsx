@@ -3,41 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 const MEMBERS = [
-  {
-    name: "GABE",
-    role: "OG TRIO · FOUNDER",
-    image: "https://media.db.com/images/public/6a30bf87c8bc35a71d08ae5f/cd09ef8a7_Untitleddesign-12.png",
-  },
-  {
-    name: "PRESTON",
-    role: "OG TRIO · FOUNDER",
-    image: "https://db.app/api/apps/6a30bf87c8bc35a71d08ae5f/files/mp/public/6a30bf87c8bc35a71d08ae5f/29ae4fa79_2.png",
-  },
-  {
-    name: "COLIN",
-    role: "OG TRIO",
-    image: "https://db.app/api/apps/6a30bf87c8bc35a71d08ae5f/files/mp/public/6a30bf87c8bc35a71d08ae5f/16a339ffb_3.png",
-  },
-  {
-    name: "RHYS",
-    role: "4TH GRADE TRIO",
-    image: "https://db.app/api/apps/6a30bf87c8bc35a71d08ae5f/files/mp/public/6a30bf87c8bc35a71d08ae5f/64de9b5d0_4.png",
-  },
-  {
-    name: "CONNOR",
-    role: "4TH GRADE TRIO",
-    image: "https://db.app/api/apps/6a30bf87c8bc35a71d08ae5f/files/mp/public/6a30bf87c8bc35a71d08ae5f/909838026_5.png",
-  },
-  {
-    name: "DOM",
-    role: "4TH GRADE TRIO",
-    image: "https://db.app/api/apps/6a30bf87c8bc35a71d08ae5f/files/mp/public/6a30bf87c8bc35a71d08ae5f/1287e29c5_6.png",
-  },
-  {
-    name: "WYATT",
-    role: "6TH GRADE TRIO",
-    image: "https://db.app/api/apps/6a30bf87c8bc35a71d08ae5f/files/mp/public/6a30bf87c8bc35a71d08ae5f/f9befa98a_7.png",
-  },
+  { name: "GABE",    role: "OG TRIO · FOUNDER", image: "/members/1.png" },
+  { name: "PRESTON", role: "OG TRIO · FOUNDER", image: "/members/2.png" },
+  { name: "COLIN",   role: "OG TRIO",           image: "/members/3.png" },
+  { name: "RHYS",    role: "4TH GRADE TRIO",    image: "/members/4.png" },
+  { name: "CONNOR",  role: "4TH GRADE TRIO",    image: "/members/5.png" },
+  { name: "DOM",     role: "4TH GRADE TRIO",    image: "/members/6.png" },
+  { name: "WYATT",   role: "6TH GRADE TRIO",    image: "/members/7.png" },
 ];
 
 /* ─── Mobile card ──────────────────────────────────────────────── */
