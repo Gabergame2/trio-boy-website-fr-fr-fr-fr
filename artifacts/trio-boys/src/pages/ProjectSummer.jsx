@@ -169,7 +169,7 @@ export default function ProjectSummer() {
               <DailyPhoto
                 name="Gabe"
                 day="Day 2"
-                date="June 29, 2026"
+                date="June 28, 2026"
                 image="/project-summer/day2.jpg"
                 delay={0.7}
               />
@@ -215,43 +215,43 @@ export default function ProjectSummer() {
               />
               <DailyPhoto
                 name="Gabe"
-                day="Day 7"
-                date="July 3, 2026"
+                day="Day 8"
+                date="July 4, 2026"
                 image="/project-summer/day8.jpg"
                 delay={1.25}
               />
               <DailyPhoto
                 name="Gabe"
-                day="Day 7"
-                date="July 3, 2026"
+                day="Day 9"
+                date="July 5, 2026"
                 image="/project-summer/day9.jpg"
                 delay={1.3}
               />
               <DailyPhoto
                 name="Gabe"
-                day="Day 7"
-                date="July 3, 2026"
+                day="Day 10"
+                date="July 6, 2026"
                 image="/project-summer/day10.jpg"
                 delay={1.35}
               />
               <DailyPhoto
                 name="Gabe"
-                day="Day 7"
-                date="July 3, 2026"
+                day="Day 11"
+                date="July 7, 2026"
                 image="/project-summer/day11.jpg"
                 delay={1.4}
               />
               <DailyPhoto
                 name="Gabe"
-                day="Day 7"
-                date="July 3, 2026"
+                day="Day 12"
+                date="July 8, 2026"
                 image="/project-summer/day12.jpg"
                 delay={1.45}
               />
               <DailyPhoto
                 name="Gabe"
-                day="Day 7"
-                date="July 3, 2026"
+                day="Day 13"
+                date="July 9, 2026"
                 image="/project-summer/day13.jpg"
                 delay={1.5}
               />
