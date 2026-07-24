@@ -1,0 +1,17 @@
+[[pages]]
+path = "/"
+screenshotTimestamp = "2026-07-17T06:35:29.177Z"
+
+[pages.screenshotAssetRef]
+replId = "25a46774-742c-456e-a74c-d0b80a4b72cf"
+kind = 2
+id = "019f6ec9-7e79-738a-8fcb-490c705e3a9e"
+
+[[pages]]
+path = "/project-summer"
+screenshotTimestamp = "2026-07-17T06:22:13.860Z"
+
+[pages.screenshotAssetRef]
+replId = "25a46774-742c-456e-a74c-d0b80a4b72cf"
+kind = 2
+id = "019f6ebd-5967-77dc-90d6-39175b010c11"
