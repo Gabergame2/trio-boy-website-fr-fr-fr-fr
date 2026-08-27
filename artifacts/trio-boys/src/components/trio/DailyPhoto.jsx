@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 
-export default function DailyPhoto({ name, day, date, image, delay = 0.6 }) {
+export default function DailyPhoto({ name, day, date, image, delay = 0.6, showCaption = true }) {
   return (
     <motion.div
       className="max-w-md mx-auto"
@@ -26,19 +26,21 @@ export default function DailyPhoto({ name, day, date, image, delay = 0.6 }) {
           DOWNLOAD
         </a>
       </div>
-      <div className="mt-5 text-center">
-        <h3 className="font-display text-3xl font-black tracking-tight">
-          {name.toUpperCase()}
-        </h3>
-        <p className="text-accent text-xs font-body tracking-[0.3em] uppercase mt-1">
-          {day}
-        </p>
-        {date && (
-          <p className="text-muted-foreground text-xs font-body tracking-widest mt-0.5">
-            {date}
+      {showCaption && (
+        <div className="mt-5 text-center">
+          <h3 className="font-display text-3xl font-black tracking-tight">
+            {name.toUpperCase()}
+          </h3>
+          <p className="text-accent text-xs font-body tracking-[0.3em] uppercase mt-1">
+            {day}
           </p>
-        )}
-      </div>
+          {date && (
+            <p className="text-muted-foreground text-xs font-body tracking-widest mt-0.5">
+              {date}
+            </p>
+          )}
+        </div>
+      )}
     </motion.div>
   );
 }

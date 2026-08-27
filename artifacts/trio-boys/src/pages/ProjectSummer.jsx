@@ -180,6 +180,7 @@ export default function ProjectSummer() {
                 date="July 3, 2026"
                 image="/project-summer/day8.jpg"
                 delay={1.25}
+                showCaption={false}
               />
               <DailyPhoto
                 name="Gabe"
@@ -187,6 +188,7 @@ export default function ProjectSummer() {
                 date="July 3, 2026"
                 image="/project-summer/day9.jpg"
                 delay={1.3}
+                showCaption={false}
               />
               <DailyPhoto
                 name="Gabe"
@@ -194,6 +196,7 @@ export default function ProjectSummer() {
                 date="July 3, 2026"
                 image="/project-summer/day10.jpg"
                 delay={1.35}
+                showCaption={false}
               />
               <DailyPhoto
                 name="Gabe"
@@ -201,6 +204,7 @@ export default function ProjectSummer() {
                 date="July 3, 2026"
                 image="/project-summer/day11.jpg"
                 delay={1.4}
+                showCaption={false}
               />
               <DailyPhoto
                 name="Gabe"
@@ -208,6 +212,7 @@ export default function ProjectSummer() {
                 date="July 3, 2026"
                 image="/project-summer/day12.jpg"
                 delay={1.45}
+                showCaption={false}
               />
               <DailyPhoto
                 name="Gabe"
@@ -215,6 +220,7 @@ export default function ProjectSummer() {
                 date="July 3, 2026"
                 image="/project-summer/day13.jpg"
                 delay={1.5}
+                showCaption={false}
               />
             </div>
           </motion.div>
