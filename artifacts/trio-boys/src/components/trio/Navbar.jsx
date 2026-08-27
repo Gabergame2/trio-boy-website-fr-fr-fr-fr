@@ -48,12 +48,12 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <button onClick={() => scrollTo("#hero")} className="flex items-center gap-2 group">
-            <img
-              src="/logo.png"
-              alt="Trio Boys Logo"
-              className="h-12 w-auto object-contain group-hover:scale-110 transition-transform duration-300"
-            />
+          <button
+            onClick={() => scrollTo("#hero")}
+            aria-label="Website home"
+            className="font-display text-2xl md:text-3xl font-black tracking-[0.12em] text-foreground group-hover:text-primary transition-colors duration-300"
+          >
+            Website
           </button>
 
           {/* Desktop nav */}
