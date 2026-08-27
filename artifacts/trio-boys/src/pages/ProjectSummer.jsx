@@ -2,7 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Sun, Calendar, Flame, Mail } from "lucide-react";
+import { ArrowLeft, Sun, Calendar, Flame } from "lucide-react";
 import Navbar from "@/components/trio/Navbar";
 import DailyPhoto from "@/components/trio/DailyPhoto";
 
@@ -101,45 +101,6 @@ export default function ProjectSummer() {
                 />
               ))}
             </div>
-          </motion.div>
-
-          {/* Email sign up */}
-          <motion.div
-            className="mt-16 text-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-          >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="w-8 h-px bg-primary" />
-              <Mail className="w-4 h-4 text-primary" />
-              <span className="text-primary text-xs font-body tracking-[0.3em] uppercase font-medium">
-                Get Notified
-              </span>
-              <div className="w-8 h-px bg-primary" />
-            </div>
-            <h3 className="font-display text-2xl md:text-3xl font-bold mb-3">
-              NEVER MISS A <span className="text-accent">DROP</span>
-            </h3>
-            <p className="text-muted-foreground mb-6 text-sm">
-              Join the inner circle. Early access to videos, merch, and exclusive content.
-            </p>
-            <form
-              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input
-                type="email"
-                placeholder="YOUR EMAIL"
-                className="flex-1 bg-muted border border-border px-5 py-3.5 text-sm font-body tracking-wider placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors"
-              />
-              <button
-                type="submit"
-                className="bg-primary text-primary-foreground px-8 py-3.5 text-sm font-bold tracking-[0.15em] hover:bg-accent hover:text-accent-foreground transition-colors duration-300 whitespace-nowrap"
-              >
-                JOIN NOW
-              </button>
-            </form>
           </motion.div>
 
           {/* Daily photo */}
