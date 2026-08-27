@@ -51,9 +51,16 @@ export default function Navbar() {
           <button
             onClick={() => scrollTo("#hero")}
             aria-label="Website home"
-            className="font-display text-2xl md:text-3xl font-black tracking-[0.12em] text-foreground group-hover:text-primary transition-colors duration-300"
+            className="flex items-center gap-2 group"
           >
-            Website
+            <img
+              src="/logo.png"
+              alt="Trio Boys Logo"
+              className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+            />
+            <span className="font-display text-2xl md:text-3xl font-black tracking-[0.12em] text-foreground group-hover:text-primary transition-colors duration-300">
+              Website
+            </span>
           </button>
 
           {/* Desktop nav */}
