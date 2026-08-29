@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import MediaVault from "./MediaVault";
 
 const MEMBERS = [
   { name: "GABE",    role: "OG TRIO · FOUNDER", image: "/members/1.png" },
@@ -13,7 +14,30 @@ const MEMBERS = [
 ];
 
 /* ─── Mobile card ──────────────────────────────────────────────── */
-function MobileCard({ member, i }) {
+function HoldIndicator({ progress }) {
+  if (!progress) return null;
+
+  return (
+    <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+      <div className="rounded-full bg-background/80 backdrop-blur-sm border border-primary/70 p-3 shadow-[0_0_30px_hsl(var(--primary)/0.35)]">
+        <div
+          className="w-16 h-16 rounded-full flex items-center justify-center"
+          style={{
+            background: `conic-gradient(hsl(var(--primary)) ${progress * 360}deg, hsl(var(--foreground) / 0.15) 0deg)`,
+          }}
+        >
+          <div className="w-[3.4rem] h-[3.4rem] rounded-full bg-background flex items-center justify-center">
+            <span className="text-[0.55rem] text-primary font-bold tracking-widest text-center leading-tight">
+              {progress >= 1 ? "OPEN" : "HOLD"}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MobileCard({ member, i, holdProgress = 0, onHoldStart, onHoldEnd }) {
   return (
     <motion.div
       className="relative overflow-hidden rounded-lg"
@@ -21,6 +45,11 @@ function MobileCard({ member, i }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: i * 0.07, duration: 0.45, ease: "easeOut" }}
+      onPointerDown={member.name === "GABE" ? onHoldStart : undefined}
+      onPointerUp={member.name === "GABE" ? onHoldEnd : undefined}
+      onPointerLeave={member.name === "GABE" ? onHoldEnd : undefined}
+      onPointerCancel={member.name === "GABE" ? onHoldEnd : undefined}
+      onContextMenu={member.name === "GABE" ? (event) => event.preventDefault() : undefined}
     >
       {/* Photo */}
       <img
@@ -31,6 +60,7 @@ function MobileCard({ member, i }) {
 
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+      {member.name === "GABE" && <HoldIndicator progress={holdProgress} />}
 
       {/* Number watermark */}
       <span className="absolute top-2 left-3 font-display font-black text-5xl text-foreground/10 leading-none select-none pointer-events-none">
@@ -54,13 +84,25 @@ function MobileCard({ member, i }) {
 }
 
 /* ─── Desktop panel ────────────────────────────────────────────── */
-function DesktopPanel({ member, i, activeIndex, setActiveIndex }) {
+function DesktopPanel({
+  member,
+  i,
+  activeIndex,
+  setActiveIndex,
+  holdProgress = 0,
+  onHoldStart,
+  onHoldEnd,
+}) {
   return (
     <motion.div
       key={member.name}
       className="relative flex-1 cursor-pointer overflow-hidden group"
       onMouseEnter={() => setActiveIndex(i)}
       onMouseLeave={() => setActiveIndex(null)}
+      onPointerDown={member.name === "GABE" ? onHoldStart : undefined}
+      onPointerUp={member.name === "GABE" ? onHoldEnd : undefined}
+      onPointerCancel={member.name === "GABE" ? onHoldEnd : undefined}
+      onContextMenu={member.name === "GABE" ? (event) => event.preventDefault() : undefined}
       animate={{
         flex: activeIndex === null ? 1 : activeIndex === i ? 2.5 : 0.55,
         opacity: activeIndex === null ? 1 : activeIndex === i ? 1 : 0.4,
@@ -76,6 +118,7 @@ function DesktopPanel({ member, i, activeIndex, setActiveIndex }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
       </div>
+      {member.name === "GABE" && <HoldIndicator progress={holdProgress} />}
 
       {/* Vertical divider */}
       {i < MEMBERS.length - 1 && (
@@ -114,9 +157,53 @@ function DesktopPanel({ member, i, activeIndex, setActiveIndex }) {
 /* ─── Section ──────────────────────────────────────────────────── */
 export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const [vaultOpen, setVaultOpen] = useState(false);
+  const holdTimer = useRef(null);
+  const holdProgressTimer = useRef(null);
+
+  const clearHold = useCallback(() => {
+    window.clearTimeout(holdTimer.current);
+    window.clearInterval(holdProgressTimer.current);
+    holdTimer.current = null;
+    holdProgressTimer.current = null;
+    setHoldProgress(0);
+  }, []);
+
+  const startGabeHold = useCallback((event) => {
+    if (event.pointerType === "mouse" && event.button !== 0) return;
+    event.preventDefault();
+    clearHold();
+
+    const startedAt = Date.now();
+    const holdDuration = 1800;
+    setHoldProgress(0.01);
+    holdProgressTimer.current = window.setInterval(() => {
+      setHoldProgress(Math.min((Date.now() - startedAt) / holdDuration, 1));
+    }, 40);
+    holdTimer.current = window.setTimeout(() => {
+      window.clearInterval(holdProgressTimer.current);
+      holdProgressTimer.current = null;
+      setHoldProgress(1);
+      setVaultOpen(true);
+      window.setTimeout(() => setHoldProgress(0), 350);
+    }, holdDuration);
+  }, [clearHold]);
+
+  const endGabeHold = useCallback(() => {
+    if (!vaultOpen) clearHold();
+  }, [clearHold, vaultOpen]);
+
+  const closeVault = useCallback(() => {
+    setVaultOpen(false);
+    setHoldProgress(0);
+  }, []);
+
+  React.useEffect(() => () => clearHold(), [clearHold]);
 
   return (
-    <section id="hero" className="relative min-h-screen flex flex-col overflow-hidden">
+    <>
+      <section id="hero" className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Background watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
         <span className="font-display font-black text-[30vw] leading-none text-foreground/[0.02]">
@@ -126,7 +213,7 @@ export default function HeroSection() {
 
       {/* ── MOBILE: 2-column portrait grid ── */}
       <div className="md:hidden flex-1 px-3 pt-24 pb-4 grid grid-cols-2 gap-3 relative z-10 auto-rows-fr">
-        {MEMBERS.map((member, i) => (
+            {MEMBERS.map((member, i) => (
           <div
             key={member.name}
             /* last item (index 6) spans both cols and is narrower to keep proportions */
@@ -134,12 +221,24 @@ export default function HeroSection() {
               ? "col-span-2 flex justify-center"
               : ""}
           >
-            {i === MEMBERS.length - 1 && MEMBERS.length % 2 === 1 ? (
+              {i === MEMBERS.length - 1 && MEMBERS.length % 2 === 1 ? (
               <div className="w-1/2">
-                <MobileCard member={member} i={i} />
+                  <MobileCard
+                    member={member}
+                    i={i}
+                    holdProgress={member.name === "GABE" ? holdProgress : 0}
+                    onHoldStart={startGabeHold}
+                    onHoldEnd={endGabeHold}
+                  />
               </div>
             ) : (
-              <MobileCard member={member} i={i} />
+                <MobileCard
+                  member={member}
+                  i={i}
+                  holdProgress={member.name === "GABE" ? holdProgress : 0}
+                  onHoldStart={startGabeHold}
+                  onHoldEnd={endGabeHold}
+                />
             )}
           </div>
         ))}
@@ -148,12 +247,15 @@ export default function HeroSection() {
       {/* ── DESKTOP: expanding horizontal panels ── */}
       <div className="hidden md:flex flex-1 relative z-10 pt-0" style={{ minHeight: "calc(100vh - 4rem)" }}>
         {MEMBERS.map((member, i) => (
-          <DesktopPanel
+            <DesktopPanel
             key={member.name}
             member={member}
             i={i}
             activeIndex={activeIndex}
             setActiveIndex={setActiveIndex}
+              holdProgress={member.name === "GABE" ? holdProgress : 0}
+              onHoldStart={startGabeHold}
+              onHoldEnd={endGabeHold}
           />
         ))}
       </div>
@@ -176,6 +278,8 @@ export default function HeroSection() {
           <ChevronDown className="w-4 h-4" />
         </motion.button>
       </motion.div>
-    </section>
+      </section>
+      <MediaVault open={vaultOpen} onClose={closeVault} />
+    </>
   );
 }
