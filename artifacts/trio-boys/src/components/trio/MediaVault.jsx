@@ -42,11 +42,13 @@ const MEDIA_SECTIONS = [
     title: "PROJECT SUMMER",
     items: Array.from({ length: 13 }, (_, index) => {
       const day = index + 1;
+      const isLaterDaySevenPhoto = day >= 8;
       return {
-        label: `Day ${day}`,
+        label: day >= 7 ? (day === 7 ? "Day 7" : "") : `Day ${day}`,
         file: `project-summer-day-${day}.jpg`,
         src: `/project-summer/day${day}.jpg`,
         kind: "JPG",
+        hideMeta: isLaterDaySevenPhoto,
       };
     }),
   },
@@ -135,12 +137,14 @@ export default function MediaVault({ open, onClose }) {
                             DOWNLOAD
                           </a>
                         </div>
-                        <div className="flex items-center justify-between gap-2 mt-2">
-                          <p className="text-xs font-bold tracking-wide truncate">{item.label}</p>
-                          <span className="text-[0.55rem] text-muted-foreground tracking-widest shrink-0">
-                            {item.kind}
-                          </span>
-                        </div>
+                        {!item.hideMeta && (
+                          <div className="flex items-center justify-between gap-2 mt-2">
+                            <p className="text-xs font-bold tracking-wide truncate">{item.label}</p>
+                            <span className="text-[0.55rem] text-muted-foreground tracking-widest shrink-0">
+                              {item.kind}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
