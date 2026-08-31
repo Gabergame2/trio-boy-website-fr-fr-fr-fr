@@ -7,6 +7,7 @@ import JellyMode from '@/components/JellyMode';
 import JellyScreen from '@/components/JellyScreen';
 import Home from '@/pages/Home';
 import ProjectSummer from '@/pages/ProjectSummer';
+import Timeline from '@/pages/Timeline';
 import PageNotFound from '@/lib/PageNotFound';
 import ScrollToTop from '@/components/ScrollToTop';
 
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/project-summer" element={<ProjectSummer />} />
+            <Route path="/timeline" element={<Timeline />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>
