@@ -28321,7 +28321,7 @@ var require_pino = __commonJS({
     function pinoBundlerAbsolutePath(p) {
       try {
         const path = __require("path");
-        const outputDir = "/home/runner/workspace/artifacts/api-server/dist";
+        const outputDir = "/vercel/share/v0-project/artifacts/api-server/dist";
         return path.resolve(outputDir, p.replace(/^\.\//, ""));
       } catch (e) {
         const f = new Function("p", "return new URL(p, import.meta.url).pathname");
@@ -56682,23 +56682,37 @@ function renderPostHtml(post) {
   return `<!doctype html><html><body style="margin:0;background:#090b10;color:#f7f7f2;font-family:Arial,sans-serif;"><main style="max-width:680px;margin:0 auto;padding:48px 24px;"><div style="color:#00f5ff;letter-spacing:.18em;font-size:12px;font-weight:700;margin-bottom:18px;">TRIO BOYS / NEWSLETTER</div>${cover}<h1 style="font-size:42px;line-height:1.05;margin:0 0 18px;">${escapeHtml(post.title)}</h1>${post.excerpt ? `<p style="font-size:18px;line-height:1.5;color:#a9adb6;margin:0 0 28px;">${escapeHtml(post.excerpt)}</p>` : ""}<div style="font-size:17px;line-height:1.75;color:#e6e7e1;">${paragraphs}</div><div style="border-top:1px solid #272b33;margin-top:44px;padding-top:18px;color:#737985;font-size:12px;letter-spacing:.08em;">TRIO BOYS \xB7 KEEP IT WEIRD</div></main></body></html>`;
 }
 async function sendPostEmail(to, post) {
-  const from = process.env.RESEND_FROM_EMAIL?.trim();
+  const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
   if (!from) {
-    throw new Error("RESEND_FROM_EMAIL is not configured");
+    throw new Error(
+      "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified sender address (for example, Trio Boys <mail@your-domain.com>)."
+    );
   }
-  const response = await connectors.proxy("resend", "/emails", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject: post.title,
-      html: renderPostHtml(post),
-      text: post.body
-    })
-  });
+  if (!from.includes("@")) {
+    throw new Error("Email sender must be a valid address and match a verified Resend domain.");
+  }
+  let response;
+  try {
+    response = await connectors.proxy("resend", "/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: post.title,
+        html: renderPostHtml(post),
+        text: post.body
+      })
+    });
+  } catch (error40) {
+    const message = error40 instanceof Error ? error40.message : "Unknown connector error";
+    throw new Error(`The Resend connector could not be reached: ${message}`);
+  }
   if (!response.ok) {
-    throw new Error(`Resend returned ${response.status}: ${await response.text()}`);
+    const details = (await response.text()).trim();
+    throw new Error(
+      `Resend rejected the email (${response.status}). ${details || "Check the sender domain and connector configuration."}`
+    );
   }
 }
 
@@ -56837,19 +56851,28 @@ router2.post("/admin/posts/:id/send", async (req, res, next) => {
       res.status(400).json({ error: "There are no active subscribers yet" });
       return;
     }
-    if (!process.env.RESEND_FROM_EMAIL) {
-      res.status(503).json({ error: "Set RESEND_FROM_EMAIL before sending" });
+    const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
+    if (!from) {
+      res.status(503).json({
+        error: "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified Resend sender address."
+      });
       return;
     }
     const results = await Promise.allSettled(
       subscribers.map((subscriber) => sendPostEmail(subscriber.email, post))
     );
     const sent = results.filter((result) => result.status === "fulfilled").length;
+    const failures = results.filter((result) => result.status === "rejected").slice(0, 3).map((result) => result.reason instanceof Error ? result.reason.message : "Unknown email error");
     const failed = results.length - sent;
     if (sent) {
       await db.update(postsTable).set({ status: "published", publishedAt: post.publishedAt ?? /* @__PURE__ */ new Date(), sentAt: /* @__PURE__ */ new Date() }).where(eq(postsTable.id, id));
     }
-    res.json({ sent, failed, recipientCount: subscribers.length });
+    res.status(failed && !sent ? 502 : 200).json({
+      sent,
+      failed,
+      recipientCount: subscribers.length,
+      ...failures.length ? { failures } : {}
+    });
   } catch (error40) {
     next(error40);
   }
@@ -56929,12 +56952,7 @@ app.use("/api", routes_default);
 var app_default = app;
 
 // src/index.ts
-var rawPort = process.env["PORT"];
-if (!rawPort) {
-  throw new Error(
-    "PORT environment variable is required but was not provided."
-  );
-}
+var rawPort = process.env["PORT"] ?? "3001";
 var port = Number(rawPort);
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
