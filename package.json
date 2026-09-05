@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "",
-    "dev": "pnpm --parallel --filter @workspace/api-server --filter @workspace/trio-boys --workspace-concurrency=2 run dev",
+    "dev": "pnpm --parallel --workspace-concurrency=2 --filter @workspace/api-server --filter @workspace/trio-boys run dev",
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
