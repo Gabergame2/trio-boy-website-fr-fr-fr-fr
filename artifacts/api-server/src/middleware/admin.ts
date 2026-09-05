@@ -1,6 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 
-export const ADMIN_USERNAME = "admin";
+export const ADMIN_USERNAME = "Gabergame2";
 export const ADMIN_SESSION_COOKIE = "trio_admin_session";
 
 export const requireAdmin: RequestHandler = (

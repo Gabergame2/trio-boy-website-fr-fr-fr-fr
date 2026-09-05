@@ -37,7 +37,7 @@ function formatDate(value?: string | null) {
 }
 
 function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
-  const [username, setUsername] = useState("admin");
+  const [username, setUsername] = useState("Gabergame2");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
