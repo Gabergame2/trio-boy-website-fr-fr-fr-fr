@@ -180,10 +180,14 @@ router.post("/admin/posts/:id/send", async (req, res, next) => {
       res.status(400).json({ error: "There are no active subscribers yet" });
       return;
     }
-    const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
-    if (!from) {
+    const smtpConfigured = Boolean(
+      process.env.SMTP_HOST?.trim() &&
+      process.env.SMTP_USER?.trim() &&
+      process.env.SMTP_PASSWORD?.trim(),
+    );
+    if (!smtpConfigured) {
       res.status(503).json({
-        error: "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified Resend sender address.",
+        error: "SMTP email is not configured. Check SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASSWORD.",
       });
       return;
     }

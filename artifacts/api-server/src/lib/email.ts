@@ -1,6 +1,4 @@
-import { ReplitConnectors } from "@replit/connectors-sdk";
-
-const connectors = new ReplitConnectors();
+import nodemailer from "nodemailer";
 
 function escapeHtml(value: string) {
   return value
@@ -27,38 +25,36 @@ export async function sendPostEmail(
   to: string,
   post: { title: string; excerpt?: string | null; body: string; coverImageUrl?: string | null },
 ) {
-  const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
-  if (!from) {
-    throw new Error(
-      "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified sender address (for example, Trio Boys <mail@your-domain.com>).",
-    );
+  const host = process.env.SMTP_HOST?.trim();
+  const port = Number.parseInt(process.env.SMTP_PORT ?? "587", 10);
+  const user = process.env.SMTP_USER?.trim();
+  const password = process.env.SMTP_PASSWORD?.trim();
+  const from = (process.env.SMTP_FROM_EMAIL ?? "Info@trioboys.com").trim();
+
+  if (!host || !user || !password || !Number.isFinite(port)) {
+    throw new Error("SMTP email is not configured. Check SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASSWORD.");
   }
   if (!from.includes("@")) {
-    throw new Error("Email sender must be a valid address and match a verified Resend domain.");
+    throw new Error("SMTP_FROM_EMAIL must be a valid sender address.");
   }
 
-  let response: Response;
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass: password },
+  });
+
   try {
-    response = await connectors.proxy("resend", "/emails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        subject: post.title,
-        html: renderPostHtml(post),
-        text: post.body,
-      }),
+    await transporter.sendMail({
+      from,
+      to,
+      subject: post.title,
+      html: renderPostHtml(post),
+      text: post.body,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown connector error";
-    throw new Error(`The Resend connector could not be reached: ${message}`);
-  }
-
-  if (!response.ok) {
-    const details = (await response.text()).trim();
-    throw new Error(
-      `Resend rejected the email (${response.status}). ${details || "Check the sender domain and connector configuration."}`,
-    );
+    const message = error instanceof Error ? error.message : "Unknown SMTP error";
+    throw new Error(`SMTP rejected the email: ${message}`);
   }
 }
