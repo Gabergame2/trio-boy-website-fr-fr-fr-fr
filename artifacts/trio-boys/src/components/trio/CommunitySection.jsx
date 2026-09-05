@@ -83,7 +83,7 @@ export default function CommunitySection() {
   async function handleSubscribe(event) {
     event.preventDefault();
     const normalizedEmail = email.trim().toLowerCase();
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(normalizedEmail)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
       setStatus("ENTER A VALID EMAIL ADDRESS.");
       return;
     }
