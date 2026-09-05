@@ -33933,296 +33933,6 @@ var require_lib5 = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/@replit+connectors-sdk@0.4.1/node_modules/@replit/connectors-sdk/identity.js
-var require_identity = __commonJS({
-  "../../node_modules/.pnpm/@replit+connectors-sdk@0.4.1/node_modules/@replit/connectors-sdk/identity.js"(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.resolveAudience = resolveAudience;
-    exports.createIdentityToken = createIdentityToken;
-    exports.resolveIdentityToken = resolveIdentityToken;
-    exports.resolveBaseUrl = resolveBaseUrl;
-    exports.buildHeaders = buildHeaders;
-    var node_child_process_1 = __require("node:child_process");
-    var node_util_1 = __require("node:util");
-    var execFileAsync = (0, node_util_1.promisify)(node_child_process_1.execFile);
-    var DEFAULT_CONNECTORS_HOST = "connectors.replit.com";
-    function resolveAudience() {
-      const audience = process.env["REPLIT_CONNECTORS_AUDIENCE"];
-      if (audience) {
-        if (audience.startsWith("http://") || audience.startsWith("https://")) {
-          return audience;
-        }
-        return `https://${audience}`;
-      }
-      return `https://${DEFAULT_CONNECTORS_HOST}`;
-    }
-    async function createIdentityToken() {
-      const replitBinary = process.env["REPLIT_CLI"] || "replit";
-      const audience = resolveAudience();
-      const { stdout } = await execFileAsync(replitBinary, [
-        "identity",
-        "create",
-        "--audience",
-        audience
-      ]);
-      const token = stdout.trim();
-      if (!token) {
-        throw new Error(`replit identity create returned an empty token (audience: ${audience})`);
-      }
-      return token;
-    }
-    async function resolveIdentityToken() {
-      try {
-        const token = await createIdentityToken();
-        return token;
-      } catch {
-      }
-      const replIdentity = process.env["REPL_IDENTITY"];
-      if (replIdentity) {
-        return `repl ${replIdentity}`;
-      }
-      const deplToken = process.env["WEB_REPL_RENEWAL"];
-      if (deplToken) {
-        return `depl ${deplToken}`;
-      }
-      throw new Error("Replit identity token not found. Could not run `replit identity create` and neither REPL_IDENTITY nor WEB_REPL_RENEWAL are set in the environment. Are you running this inside a Repl?");
-    }
-    function resolveBaseUrl() {
-      const hostname2 = process.env["REPLIT_CONNECTORS_HOSTNAME"];
-      if (hostname2) {
-        if (hostname2.startsWith("http://") || hostname2.startsWith("https://")) {
-          return hostname2;
-        }
-        return `https://${hostname2}`;
-      }
-      return `https://${DEFAULT_CONNECTORS_HOST}`;
-    }
-    async function buildHeaders() {
-      const token = await resolveIdentityToken();
-      const headers = {
-        Accept: "application/json"
-      };
-      if (token.startsWith("repl ") || token.startsWith("depl ")) {
-        headers["X-Replit-Token"] = token;
-      } else {
-        headers["Replit-Authentication"] = `Bearer ${token}`;
-      }
-      return headers;
-    }
-  }
-});
-
-// ../../node_modules/.pnpm/@replit+connectors-sdk@0.4.1/node_modules/@replit/connectors-sdk/client.js
-var require_client3 = __commonJS({
-  "../../node_modules/.pnpm/@replit+connectors-sdk@0.4.1/node_modules/@replit/connectors-sdk/client.js"(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ReplitConnectors = void 0;
-    var identity_1 = require_identity();
-    function resolveProxyTarget(url2, proxyBase) {
-      if (url2.startsWith(proxyBase)) {
-        return url2;
-      }
-      if (url2.startsWith("http://") || url2.startsWith("https://")) {
-        const parsed = new URL(url2);
-        return `${proxyBase}${parsed.pathname}${parsed.search}`;
-      }
-      return `${proxyBase}${url2.startsWith("/") ? "" : "/"}${url2}`;
-    }
-    function flattenHeaders(headers) {
-      if (!headers) {
-        return {};
-      }
-      const result = {};
-      if (headers instanceof Headers) {
-        headers.forEach((value, key) => {
-          result[key] = value;
-        });
-      } else if (Array.isArray(headers)) {
-        for (const pair of headers) {
-          result[pair[0]] = pair[1];
-        }
-      } else {
-        Object.assign(result, headers);
-      }
-      return result;
-    }
-    var dbxCompoundTokenStrategy = ({ baseUrl, connectorName, connectionId, rawIdentityToken }) => ({
-      host: baseUrl,
-      token: `${rawIdentityToken} dbx:${connectionId}`,
-      connectorName
-    });
-    var pathRouteStrategy = ({ baseUrl, connectorName, connectionId, rawIdentityToken }) => ({
-      host: `${baseUrl}/api/v2/cli-proxy/${connectorName}/${connectionId}`,
-      token: rawIdentityToken,
-      connectorName
-    });
-    var CLI_CONFIG_STRATEGIES = {
-      databricks: dbxCompoundTokenStrategy,
-      "databricks-m2m": dbxCompoundTokenStrategy,
-      "microsoft-fabric": pathRouteStrategy
-    };
-    var ReplitConnectors2 = class {
-      constructor(options) {
-        this.baseUrl = options?.baseUrl ?? (0, identity_1.resolveBaseUrl)();
-      }
-      async proxy(connectorName, path, options) {
-        const method = options?.method ?? "GET";
-        const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-        const url2 = `${this.getProxyUrl()}${normalizedPath}`;
-        const headers = {
-          ...await (0, identity_1.buildHeaders)(),
-          "Connector-Name": connectorName,
-          ...options?.headers ?? {}
-        };
-        const init = { method, headers };
-        if (options?.body !== void 0 && options.body !== null) {
-          if (typeof options.body === "string" || typeof Buffer !== "undefined" && options.body instanceof Buffer || options.body instanceof ArrayBuffer || options.body instanceof FormData || options.body instanceof URLSearchParams || options.body instanceof Blob || options.body instanceof ReadableStream) {
-            init.body = options.body;
-          } else {
-            init.body = JSON.stringify(options.body);
-            if (!headers["Content-Type"]) {
-              headers["Content-Type"] = "application/json";
-            }
-          }
-        }
-        const response = await fetch(url2, init);
-        if (response.status === 401) {
-          const freshAuth = await (0, identity_1.buildHeaders)();
-          const retryResponse = await fetch(url2, {
-            ...init,
-            headers: { ...headers, ...freshAuth }
-          });
-          return retryResponse;
-        }
-        return response;
-      }
-      async listConnections(options) {
-        const params = new URLSearchParams();
-        if (options?.connector_names) {
-          params.set("connector_names", options.connector_names);
-        }
-        for (const val of options?.expand ?? ["connector"]) {
-          params.append("expand", val);
-        }
-        params.set("refresh_policy", options?.refresh_policy ?? "none");
-        const qs = params.toString();
-        const url2 = `${this.baseUrl}/api/v2/connection${qs ? `?${qs}` : ""}`;
-        const headers = await (0, identity_1.buildHeaders)();
-        const response = await fetch(url2, { method: "GET", headers });
-        if (response.status === 401) {
-          const freshHeaders = await (0, identity_1.buildHeaders)();
-          const retryResponse = await fetch(url2, {
-            method: "GET",
-            headers: freshHeaders
-          });
-          if (!retryResponse.ok) {
-            throw new Error(`Failed to list connections: ${retryResponse.status} ${retryResponse.statusText}`);
-          }
-          const data2 = await retryResponse.json();
-          return data2.items ?? [];
-        }
-        if (!response.ok) {
-          throw new Error(`Failed to list connections: ${response.status} ${response.statusText}`);
-        }
-        const data = await response.json();
-        return data.items ?? [];
-      }
-      getProxyUrl() {
-        return `${this.baseUrl}/api/v2/proxy`;
-      }
-      async getProxyHeaders(connectorName) {
-        const headers = await (0, identity_1.buildHeaders)();
-        return { ...headers, "Connector-Name": connectorName };
-      }
-      async getCliConfig(connectorName) {
-        const strategy = CLI_CONFIG_STRATEGIES[connectorName];
-        if (!strategy) {
-          const supported = Object.keys(CLI_CONFIG_STRATEGIES).join(", ");
-          throw new Error(`getCliConfig() is only supported for ${supported}, got: ${connectorName}`);
-        }
-        const connections = await this.listConnections({
-          connector_names: connectorName
-        });
-        const connection = connections[0];
-        if (!connection) {
-          throw new Error(`No ${connectorName} connection found`);
-        }
-        const headers = await (0, identity_1.buildHeaders)();
-        const identityToken = headers["X-Replit-Token"] ?? headers["Replit-Authentication"];
-        if (!identityToken) {
-          throw new Error("Replit identity token not found");
-        }
-        const rawToken = identityToken.replace(/^Bearer\s+/i, "");
-        return strategy({
-          baseUrl: this.baseUrl,
-          connectorName,
-          connectionId: connection.id,
-          rawIdentityToken: rawToken
-        });
-      }
-      createProxyFetch(connectorName) {
-        const proxyBase = this.getProxyUrl();
-        return async (input, init) => {
-          const rawUrl = input instanceof Request ? input.url : String(input);
-          const targetUrl = resolveProxyTarget(rawUrl, proxyBase);
-          const authHeaders = await (0, identity_1.buildHeaders)();
-          const userHeaders = flattenHeaders(init?.headers ?? (input instanceof Request ? input.headers : void 0));
-          const headers = {
-            ...authHeaders,
-            "Connector-Name": connectorName,
-            ...userHeaders
-          };
-          const requestDefaults = input instanceof Request ? {
-            method: input.method,
-            body: input.body,
-            cache: input.cache,
-            credentials: input.credentials,
-            integrity: input.integrity,
-            keepalive: input.keepalive,
-            mode: input.mode,
-            redirect: input.redirect,
-            referrer: input.referrer,
-            referrerPolicy: input.referrerPolicy,
-            signal: input.signal,
-            // @ts-expect-error duplex is required for streaming bodies but missing from RequestInit
-            duplex: input.body ? "half" : void 0
-          } : {};
-          const fetchInit = { ...requestDefaults, ...init, headers };
-          const response = await fetch(targetUrl, fetchInit);
-          if (response.status === 401) {
-            const freshAuth = await (0, identity_1.buildHeaders)();
-            return fetch(targetUrl, {
-              ...fetchInit,
-              headers: {
-                ...freshAuth,
-                "Connector-Name": connectorName,
-                ...userHeaders
-              }
-            });
-          }
-          return response;
-        };
-      }
-    };
-    exports.ReplitConnectors = ReplitConnectors2;
-  }
-});
-
-// ../../node_modules/.pnpm/@replit+connectors-sdk@0.4.1/node_modules/@replit/connectors-sdk/index.js
-var require_connectors_sdk = __commonJS({
-  "../../node_modules/.pnpm/@replit+connectors-sdk@0.4.1/node_modules/@replit/connectors-sdk/index.js"(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.ReplitConnectors = void 0;
-    var client_1 = require_client3();
-    Object.defineProperty(exports, "ReplitConnectors", { enumerable: true, get: function() {
-      return client_1.ReplitConnectors;
-    } });
-  }
-});
-
 // src/app.ts
 var import_express4 = __toESM(require_express2(), 1);
 var import_cors = __toESM(require_lib3(), 1);
@@ -56671,8 +56381,7 @@ function sessionCookieOptions() {
 }
 
 // src/lib/email.ts
-var import_connectors_sdk = __toESM(require_connectors_sdk(), 1);
-var connectors = new import_connectors_sdk.ReplitConnectors();
+import nodemailer from "nodemailer";
 function escapeHtml(value) {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 }
@@ -56682,37 +56391,34 @@ function renderPostHtml(post) {
   return `<!doctype html><html><body style="margin:0;background:#090b10;color:#f7f7f2;font-family:Arial,sans-serif;"><main style="max-width:680px;margin:0 auto;padding:48px 24px;"><div style="color:#00f5ff;letter-spacing:.18em;font-size:12px;font-weight:700;margin-bottom:18px;">TRIO BOYS / NEWSLETTER</div>${cover}<h1 style="font-size:42px;line-height:1.05;margin:0 0 18px;">${escapeHtml(post.title)}</h1>${post.excerpt ? `<p style="font-size:18px;line-height:1.5;color:#a9adb6;margin:0 0 28px;">${escapeHtml(post.excerpt)}</p>` : ""}<div style="font-size:17px;line-height:1.75;color:#e6e7e1;">${paragraphs}</div><div style="border-top:1px solid #272b33;margin-top:44px;padding-top:18px;color:#737985;font-size:12px;letter-spacing:.08em;">TRIO BOYS \xB7 KEEP IT WEIRD</div></main></body></html>`;
 }
 async function sendPostEmail(to, post) {
-  const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
-  if (!from) {
-    throw new Error(
-      "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified sender address (for example, Trio Boys <mail@your-domain.com>)."
-    );
+  const host = process.env.SMTP_HOST?.trim();
+  const port2 = Number.parseInt(process.env.SMTP_PORT ?? "587", 10);
+  const user = process.env.SMTP_USER?.trim();
+  const password = process.env.SMTP_PASSWORD?.trim();
+  const from = (process.env.SMTP_FROM_EMAIL ?? "Info@trioboys.com").trim();
+  if (!host || !user || !password || !Number.isFinite(port2)) {
+    throw new Error("SMTP email is not configured. Check SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASSWORD.");
   }
   if (!from.includes("@")) {
-    throw new Error("Email sender must be a valid address and match a verified Resend domain.");
+    throw new Error("SMTP_FROM_EMAIL must be a valid sender address.");
   }
-  let response;
+  const transporter = nodemailer.createTransport({
+    host,
+    port: port2,
+    secure: port2 === 465,
+    auth: { user, pass: password }
+  });
   try {
-    response = await connectors.proxy("resend", "/emails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        subject: post.title,
-        html: renderPostHtml(post),
-        text: post.body
-      })
+    await transporter.sendMail({
+      from,
+      to,
+      subject: post.title,
+      html: renderPostHtml(post),
+      text: post.body
     });
   } catch (error40) {
-    const message = error40 instanceof Error ? error40.message : "Unknown connector error";
-    throw new Error(`The Resend connector could not be reached: ${message}`);
-  }
-  if (!response.ok) {
-    const details = (await response.text()).trim();
-    throw new Error(
-      `Resend rejected the email (${response.status}). ${details || "Check the sender domain and connector configuration."}`
-    );
+    const message = error40 instanceof Error ? error40.message : "Unknown SMTP error";
+    throw new Error(`SMTP rejected the email: ${message}`);
   }
 }
 
@@ -56851,10 +56557,12 @@ router2.post("/admin/posts/:id/send", async (req, res, next) => {
       res.status(400).json({ error: "There are no active subscribers yet" });
       return;
     }
-    const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
-    if (!from) {
+    const smtpConfigured = Boolean(
+      process.env.SMTP_HOST?.trim() && process.env.SMTP_USER?.trim() && process.env.SMTP_PASSWORD?.trim()
+    );
+    if (!smtpConfigured) {
       res.status(503).json({
-        error: "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified Resend sender address."
+        error: "SMTP email is not configured. Check SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASSWORD."
       });
       return;
     }
