@@ -15,7 +15,7 @@ import {
   useListAdminPosts,
   useListAdminSubscribers,
 } from "@workspace/api-client-react";
-import type { Post } from "@workspace/api-client-react";
+import type { Post, Subscriber } from "@workspace/api-client-react";
 import { ArrowLeft, Check, ChevronRight, FileText, LogOut, Mail, Plus, Send, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -75,12 +75,17 @@ function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
 
 function AdminDashboard({ profile, onLoggedOut }: { profile: { username: string }; onLoggedOut: () => void }) {
   const queryClient = useQueryClient();
-  const { data: posts = [], isLoading: postsLoading } = useListAdminPosts();
+  const { data: postsResponse, isLoading: postsLoading } = useListAdminPosts();
+  const posts = Array.isArray(postsResponse)
+    ? postsResponse
+    : Array.isArray((postsResponse as unknown as { data?: Post[] } | undefined)?.data)
+      ? ((postsResponse as unknown as { data: Post[] }).data)
+      : [];
   const { data: subscriberResponse, isLoading: subscribersLoading } = useListAdminSubscribers();
-  const subscribers = Array.isArray(subscriberResponse)
+  const subscribers: Subscriber[] = Array.isArray(subscriberResponse)
     ? subscriberResponse
-    : Array.isArray((subscriberResponse as { data?: unknown[] } | undefined)?.data)
-      ? ((subscriberResponse as { data: unknown[] }).data)
+    : Array.isArray((subscriberResponse as unknown as { data?: Subscriber[] } | undefined)?.data)
+      ? ((subscriberResponse as unknown as { data: Subscriber[] }).data)
       : [];
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [draft, setDraft] = useState<Draft>(blankDraft);
