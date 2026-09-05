@@ -56645,7 +56645,7 @@ var pool = new Pool3({ connectionString: process.env.DATABASE_URL });
 var db = drizzle(pool, { schema: schema_exports });
 
 // src/middleware/admin.ts
-var ADMIN_USERNAME = "admin";
+var ADMIN_USERNAME = "Gabergame2";
 var ADMIN_SESSION_COOKIE = "trio_admin_session";
 var requireAdmin = (req, res, next) => {
   if (!process.env.SESSION_SECRET) {
