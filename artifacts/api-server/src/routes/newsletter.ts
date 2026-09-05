@@ -2,12 +2,19 @@ import { Router, type IRouter } from "express";
 import { and, desc, eq } from "drizzle-orm";
 import {
   CreateAdminPostBody,
+  LoginAdminBody,
   SubscribeToNewsletterBody,
   UpdateAdminPostBody,
 } from "@workspace/api-zod";
 import { db, postsTable, subscribersTable } from "@workspace/db";
-import { requireAdmin } from "../middleware/admin";
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_USERNAME,
+  requireAdmin,
+  sessionCookieOptions,
+} from "../middleware/admin";
 import { sendPostEmail } from "../lib/email";
+import { timingSafeEqual } from "node:crypto";
 
 const router: IRouter = Router();
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -16,6 +23,37 @@ function parseId(value: string) {
   const id = Number(value);
   return Number.isInteger(id) && id > 0 ? id : null;
 }
+
+router.post("/admin/login", (req, res, next) => {
+  try {
+    const input = LoginAdminBody.parse(req.body);
+    const configuredPassword = process.env.TRIO_ADMIN_PASSWORD;
+    if (!configuredPassword) {
+      res.status(503).json({ error: "Admin password is not configured" });
+      return;
+    }
+
+    const supplied = Buffer.from(input.password);
+    const expected = Buffer.from(configuredPassword);
+    const passwordMatches =
+      supplied.length === expected.length && timingSafeEqual(supplied, expected);
+
+    if (input.username !== ADMIN_USERNAME || !passwordMatches) {
+      res.status(401).json({ error: "Invalid username or password" });
+      return;
+    }
+
+    res.cookie(ADMIN_SESSION_COOKIE, ADMIN_USERNAME, sessionCookieOptions());
+    res.json({ username: ADMIN_USERNAME });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/admin/logout", (req, res) => {
+  res.clearCookie(ADMIN_SESSION_COOKIE, { path: "/" });
+  res.status(204).send();
+});
 
 router.post("/subscribe", async (req, res, next) => {
   try {

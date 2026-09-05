@@ -50,15 +50,36 @@ export declare const SubscribeToNewsletterResponse: zod.ZodObject<{
  * @summary Get the signed-in admin profile
  */
 export declare const GetAdminProfileResponse: zod.ZodObject<{
-    email: zod.ZodString;
-    userId: zod.ZodString;
+    username: zod.ZodString;
 }, "strip", zod.ZodTypeAny, {
-    email: string;
-    userId: string;
+    username: string;
 }, {
-    email: string;
-    userId: string;
+    username: string;
 }>;
+/**
+ * @summary Start a local admin session
+ */
+export declare const LoginAdminBody: zod.ZodObject<{
+    username: zod.ZodString;
+    password: zod.ZodString;
+}, "strip", zod.ZodTypeAny, {
+    username: string;
+    password: string;
+}, {
+    username: string;
+    password: string;
+}>;
+export declare const LoginAdminResponse: zod.ZodObject<{
+    username: zod.ZodString;
+}, "strip", zod.ZodTypeAny, {
+    username: string;
+}, {
+    username: string;
+}>;
+/**
+ * @summary End the local admin session
+ */
+export declare const LogoutAdminResponse: zod.ZodVoid;
 /**
  * @summary List newsletter posts
  */

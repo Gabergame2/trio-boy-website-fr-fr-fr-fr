@@ -6,6 +6,6 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface AdminProfile {
+export interface AdminLoginResponse {
   username: string;
 }

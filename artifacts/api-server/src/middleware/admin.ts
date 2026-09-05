@@ -1,37 +1,34 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
-import { clerkClient, getAuth } from "@clerk/express";
 
-export const requireAdmin: RequestHandler = async (
+export const ADMIN_USERNAME = "admin";
+export const ADMIN_SESSION_COOKIE = "trio_admin_session";
+
+export const requireAdmin: RequestHandler = (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  try {
-    const { userId } = getAuth(req);
-    if (!userId) {
-      res.status(401).json({ error: "Authentication required" });
-      return;
-    }
-
-    const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
-    if (!adminEmail) {
-      res.status(503).json({ error: "Admin access is not configured" });
-      return;
-    }
-
-    const user = await clerkClient.users.getUser(userId);
-    const primaryEmail = user.emailAddresses.find(
-      (address) => address.id === user.primaryEmailAddressId,
-    )?.emailAddress.toLowerCase();
-
-    if (!primaryEmail || primaryEmail !== adminEmail) {
-      res.status(403).json({ error: "Admin access required" });
-      return;
-    }
-
-    res.locals.admin = { userId, email: primaryEmail };
-    next();
-  } catch (error) {
-    next(error);
+  if (!process.env.SESSION_SECRET) {
+    res.status(503).json({ error: "Admin sessions are not configured" });
+    return;
   }
+
+  if (req.signedCookies?.[ADMIN_SESSION_COOKIE] !== ADMIN_USERNAME) {
+    res.status(401).json({ error: "Admin login required" });
+    return;
+  }
+
+  res.locals.admin = { username: ADMIN_USERNAME };
+  next();
 };
+
+export function sessionCookieOptions() {
+  return {
+    httpOnly: true,
+    signed: true,
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 1000 * 60 * 60 * 24 * 14,
+    path: "/",
+  };
+}

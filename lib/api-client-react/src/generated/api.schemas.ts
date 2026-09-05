@@ -92,8 +92,18 @@ export interface SubscriberInput {
 }
 
 export interface AdminProfile {
-  email: string;
-  userId: string;
+  username: string;
+}
+
+export interface AdminLoginInput {
+  /** @minLength 1 */
+  username: string;
+  /** @minLength 1 */
+  password: string;
+}
+
+export interface AdminLoginResponse {
+  username: string;
 }
 
 export interface SendResult {

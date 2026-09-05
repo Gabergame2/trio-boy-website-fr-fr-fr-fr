@@ -20,6 +20,8 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  AdminLoginInput,
+  AdminLoginResponse,
   AdminProfile,
   HealthStatus,
   Post,
@@ -282,6 +284,148 @@ export function useGetAdminProfile<TData = Awaited<ReturnType<typeof getAdminPro
 
 
 
+
+export const getLoginAdminUrl = () => {
+
+
+
+
+  return `/api/admin/login`
+}
+
+/**
+ * @summary Start a local admin session
+ */
+export const loginAdmin = async (adminLoginInput: AdminLoginInput, options?: RequestInit): Promise<AdminLoginResponse> => {
+
+  return customFetch<AdminLoginResponse>(getLoginAdminUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(adminLoginInput)
+  }
+);}
+
+
+
+
+
+export const getLoginAdminMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loginAdmin>>, TError,{data: BodyType<AdminLoginInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof loginAdmin>>, TError,{data: BodyType<AdminLoginInput>}, TContext> => {
+
+const mutationKey = ['loginAdmin'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof loginAdmin>>, {data: BodyType<AdminLoginInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  loginAdmin(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LoginAdminMutationResult = NonNullable<Awaited<ReturnType<typeof loginAdmin>>>
+    export type LoginAdminMutationBody = BodyType<AdminLoginInput>
+    export type LoginAdminMutationError = ErrorType<void>
+
+    /**
+ * @summary Start a local admin session
+ */
+export const useLoginAdmin = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loginAdmin>>, TError,{data: BodyType<AdminLoginInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof loginAdmin>>,
+        TError,
+        {data: BodyType<AdminLoginInput>},
+        TContext
+      > => {
+      return useMutation(getLoginAdminMutationOptions(options));
+    }
+
+export const getLogoutAdminUrl = () => {
+
+
+
+
+  return `/api/admin/logout`
+}
+
+/**
+ * @summary End the local admin session
+ */
+export const logoutAdmin = async ( options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getLogoutAdminUrl(),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getLogoutAdminMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof logoutAdmin>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof logoutAdmin>>, TError,void, TContext> => {
+
+const mutationKey = ['logoutAdmin'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof logoutAdmin>>, void> = () => {
+
+
+          return  logoutAdmin(requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LogoutAdminMutationResult = NonNullable<Awaited<ReturnType<typeof logoutAdmin>>>
+
+    export type LogoutAdminMutationError = ErrorType<unknown>
+
+    /**
+ * @summary End the local admin session
+ */
+export const useLogoutAdmin = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof logoutAdmin>>, TError,void, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof logoutAdmin>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getLogoutAdminMutationOptions(options));
+    }
 
 export const getListAdminPostsUrl = () => {
 

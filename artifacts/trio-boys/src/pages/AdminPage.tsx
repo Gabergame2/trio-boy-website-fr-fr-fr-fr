@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useAuth, useClerk, useUser } from "@clerk/react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   createAdminPost,
   deleteAdminPost,
+  getGetAdminProfileQueryKey,
   getListAdminPostsQueryKey,
   getListAdminSubscribersQueryKey,
-  getGetAdminProfileQueryKey,
-  listAdminPosts,
-  listAdminSubscribers,
+  loginAdmin,
+  logoutAdmin,
   removeAdminSubscriber,
   sendAdminPost,
   updateAdminPost,
@@ -18,7 +17,7 @@ import {
 } from "@workspace/api-client-react";
 import type { Post } from "@workspace/api-client-react";
 import { ArrowLeft, Check, ChevronRight, FileText, LogOut, Mail, Plus, Send, Trash2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,27 +36,45 @@ function formatDate(value?: string | null) {
   return value ? new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value)) : "—";
 }
 
-function AdminLogin() {
-  const navigate = useNavigate();
+function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
+  const [username, setUsername] = useState("admin");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setBusy(true);
+    setError("");
+    try {
+      await loginAdmin({ username, password });
+      onSuccess();
+    } catch {
+      setError("That username or password is not correct.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#080a0e] px-6 py-20 text-white">
       <div className="mx-auto max-w-xl border border-white/10 bg-white/[0.03] p-8 md:p-12">
         <p className="mb-4 text-xs font-bold tracking-[0.3em] text-[#00f5ff]">TRIO BOYS / PRIVATE STUDIO</p>
-        <h1 className="font-display text-4xl font-black">Sign in to publish.</h1>
-        <p className="mt-4 text-sm leading-7 text-white/55">The studio is reserved for the site administrator. Sign in with your Clerk account to continue.</p>
-        <Button className="mt-8 h-12 rounded-none bg-[#00f5ff] px-7 font-bold tracking-[0.16em] text-[#080a0e] hover:bg-[#dfff00]" onClick={() => navigate("/sign-in")}>
-          OPEN SIGN IN
-        </Button>
+        <h1 className="font-display text-4xl font-black">Log in to publish.</h1>
+        <p className="mt-4 text-sm leading-7 text-white/55">This private studio uses a local administrator login. Your session stays on this site.</p>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <label className="block"><span className="mb-2 block text-[10px] font-bold tracking-[0.2em] text-white/45">USERNAME</span><Input value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" className="h-12 rounded-none border-white/15 bg-white/[0.03] text-white" /></label>
+          <label className="block"><span className="mb-2 block text-[10px] font-bold tracking-[0.2em] text-white/45">PASSWORD</span><Input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" className="h-12 rounded-none border-white/15 bg-white/[0.03] text-white" /></label>
+          {error && <p className="text-sm text-red-300">{error}</p>}
+          <Button type="submit" disabled={busy || !username || !password} className="h-12 rounded-none bg-[#00f5ff] px-7 font-bold tracking-[0.16em] text-[#080a0e] hover:bg-[#dfff00]">{busy ? "CHECKING…" : "LOG IN"}</Button>
+        </form>
       </div>
     </main>
   );
 }
 
-function AdminDashboard() {
-  const { signOut } = useClerk();
-  const { user } = useUser();
+function AdminDashboard({ profile, onLoggedOut }: { profile: { username: string }; onLoggedOut: () => void }) {
   const queryClient = useQueryClient();
-  const { data: profile, isLoading: profileLoading, isError: profileError } = useGetAdminProfile();
   const { data: posts = [], isLoading: postsLoading } = useListAdminPosts();
   const { data: subscribers = [], isLoading: subscribersLoading } = useListAdminSubscribers();
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -78,23 +95,6 @@ function AdminDashboard() {
       });
     }
   }, [selectedPost]);
-
-  if (profileLoading) {
-    return <div className="flex min-h-screen items-center justify-center bg-[#080a0e] text-xs tracking-[0.25em] text-[#00f5ff]">LOADING STUDIO…</div>;
-  }
-
-  if (profileError || !profile) {
-    return (
-      <main className="min-h-screen bg-[#080a0e] px-6 py-20 text-white">
-        <div className="mx-auto max-w-xl border border-red-400/30 bg-red-400/5 p-8">
-          <p className="text-xs font-bold tracking-[0.25em] text-red-300">ACCESS DENIED</p>
-          <h1 className="mt-3 font-display text-3xl font-black">This account is not on the admin list.</h1>
-          <p className="mt-3 text-sm leading-7 text-white/55">Sign out and return with the site administrator account.</p>
-          <Button className="mt-7 rounded-none" variant="outline" onClick={() => signOut({ redirectUrl: "/" })}>SIGN OUT</Button>
-        </div>
-      </main>
-    );
-  }
 
   const saveDraft = async (status: "draft" | "published" = "draft") => {
     if (!draft.title.trim() || !draft.body.trim()) {
@@ -166,8 +166,8 @@ function AdminDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="hidden text-xs text-white/45 md:block">{profile.email}</span>
-            <Button variant="ghost" size="sm" className="rounded-none text-white/60 hover:text-white" onClick={() => signOut({ redirectUrl: "/" })}><LogOut size={15} className="mr-2" />SIGN OUT</Button>
+            <span className="hidden text-xs text-white/45 md:block">{profile.username}</span>
+            <Button variant="ghost" size="sm" className="rounded-none text-white/60 hover:text-white" onClick={async () => { await logoutAdmin(); onLoggedOut(); }}><LogOut size={15} className="mr-2" />LOG OUT</Button>
           </div>
         </div>
       </header>
@@ -186,7 +186,7 @@ function AdminDashboard() {
           {[
             { label: "ACTIVE SUBSCRIBERS", value: subscribers.filter((subscriber) => subscriber.status === "active").length, icon: Mail },
             { label: "TOTAL POSTS", value: posts.length, icon: FileText },
-            { label: "SIGNED IN AS", value: user?.firstName ?? "ADMIN", icon: Check },
+            { label: "LOGGED IN AS", value: profile.username, icon: Check },
           ].map((stat) => (
             <div key={stat.label} className="border border-white/10 bg-white/[0.03] p-5">
               <stat.icon size={16} className="mb-5 text-[#00f5ff]" />
@@ -257,7 +257,15 @@ function AdminDashboard() {
 }
 
 export default function AdminPage() {
-  const { isLoaded, isSignedIn } = useAuth();
-  if (!isLoaded) return <div className="flex min-h-screen items-center justify-center bg-[#080a0e] text-xs tracking-[0.25em] text-[#00f5ff]">LOADING…</div>;
-  return isSignedIn ? <AdminDashboard /> : <AdminLogin />;
+  const queryClient = useQueryClient();
+  const { data: profile, isLoading, isError } = useGetAdminProfile({
+    query: { queryKey: getGetAdminProfileQueryKey(), retry: false },
+  });
+  const refreshProfile = () => {
+    void queryClient.invalidateQueries({ queryKey: getGetAdminProfileQueryKey() });
+  };
+
+  if (isLoading) return <div className="flex min-h-screen items-center justify-center bg-[#080a0e] text-xs tracking-[0.25em] text-[#00f5ff]">LOADING…</div>;
+  if (isError || !profile) return <AdminLogin onSuccess={refreshProfile} />;
+  return <AdminDashboard profile={profile} onLoggedOut={refreshProfile} />;
 }

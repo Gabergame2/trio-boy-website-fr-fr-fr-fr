@@ -37,9 +37,31 @@ export const SubscribeToNewsletterResponse = zod.object({
  * @summary Get the signed-in admin profile
  */
 export const GetAdminProfileResponse = zod.object({
-  "email": zod.string(),
-  "userId": zod.string()
+  "username": zod.string()
 })
+
+
+/**
+ * @summary Start a local admin session
+ */
+
+
+
+
+export const LoginAdminBody = zod.object({
+  "username": zod.string().min(1),
+  "password": zod.string().min(1)
+})
+
+export const LoginAdminResponse = zod.object({
+  "username": zod.string()
+})
+
+
+/**
+ * @summary End the local admin session
+ */
+export const LogoutAdminResponse = zod.void()
 
 
 /**

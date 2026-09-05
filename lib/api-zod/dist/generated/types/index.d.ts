@@ -5,6 +5,8 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export * from './adminLoginInput';
+export * from './adminLoginResponse';
 export * from './adminProfile';
 export * from './healthStatus';
 export * from './post';
