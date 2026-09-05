@@ -27,24 +27,38 @@ export async function sendPostEmail(
   to: string,
   post: { title: string; excerpt?: string | null; body: string; coverImageUrl?: string | null },
 ) {
-  const from = process.env.RESEND_FROM_EMAIL?.trim();
+  const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
   if (!from) {
-    throw new Error("RESEND_FROM_EMAIL is not configured");
+    throw new Error(
+      "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified sender address (for example, Trio Boys <mail@your-domain.com>).",
+    );
+  }
+  if (!from.includes("@")) {
+    throw new Error("Email sender must be a valid address and match a verified Resend domain.");
   }
 
-  const response = await connectors.proxy("resend", "/emails", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject: post.title,
-      html: renderPostHtml(post),
-      text: post.body,
-    }),
-  });
+  let response: Response;
+  try {
+    response = await connectors.proxy("resend", "/emails", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: post.title,
+        html: renderPostHtml(post),
+        text: post.body,
+      }),
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown connector error";
+    throw new Error(`The Resend connector could not be reached: ${message}`);
+  }
 
   if (!response.ok) {
-    throw new Error(`Resend returned ${response.status}: ${await response.text()}`);
+    const details = (await response.text()).trim();
+    throw new Error(
+      `Resend rejected the email (${response.status}). ${details || "Check the sender domain and connector configuration."}`,
+    );
   }
 }

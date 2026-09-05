@@ -129,8 +129,9 @@ function AdminDashboard({ profile, onLoggedOut }: { profile: { username: string 
       const result = await sendAdminPost(selectedId);
       setNotice(`Sent to ${result.sent} subscriber${result.sent === 1 ? "" : "s"}${result.failed ? ` · ${result.failed} failed` : ""}.`);
       await queryClient.invalidateQueries({ queryKey: getListAdminPostsQueryKey() });
-    } catch {
-      setNotice("The send did not complete. Confirm RESEND_FROM_EMAIL is configured and verified.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "The mail connector rejected the request.";
+      setNotice(`The send did not complete. ${message}`);
     } finally {
       setBusy(false);
     }

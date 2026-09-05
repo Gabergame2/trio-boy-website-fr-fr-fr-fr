@@ -180,8 +180,11 @@ router.post("/admin/posts/:id/send", async (req, res, next) => {
       res.status(400).json({ error: "There are no active subscribers yet" });
       return;
     }
-    if (!process.env.RESEND_FROM_EMAIL) {
-      res.status(503).json({ error: "Set RESEND_FROM_EMAIL before sending" });
+    const from = (process.env.RESEND_FROM_EMAIL ?? process.env.RESEND_FROM)?.trim();
+    if (!from) {
+      res.status(503).json({
+        error: "Email sender is not configured. Set RESEND_FROM_EMAIL to a verified Resend sender address.",
+      });
       return;
     }
 
@@ -189,6 +192,10 @@ router.post("/admin/posts/:id/send", async (req, res, next) => {
       subscribers.map((subscriber) => sendPostEmail(subscriber.email, post)),
     );
     const sent = results.filter((result) => result.status === "fulfilled").length;
+    const failures = results
+      .filter((result): result is PromiseRejectedResult => result.status === "rejected")
+      .slice(0, 3)
+      .map((result) => result.reason instanceof Error ? result.reason.message : "Unknown email error");
     const failed = results.length - sent;
     if (sent) {
       await db
@@ -196,7 +203,12 @@ router.post("/admin/posts/:id/send", async (req, res, next) => {
         .set({ status: "published", publishedAt: post.publishedAt ?? new Date(), sentAt: new Date() })
         .where(eq(postsTable.id, id));
     }
-    res.json({ sent, failed, recipientCount: subscribers.length });
+    res.status(failed && !sent ? 502 : 200).json({
+      sent,
+      failed,
+      recipientCount: subscribers.length,
+      ...(failures.length ? { failures } : {}),
+    });
   } catch (error) {
     next(error);
   }
