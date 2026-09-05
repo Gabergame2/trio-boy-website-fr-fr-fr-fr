@@ -96,7 +96,13 @@ export default function CommunitySection() {
       setEmail("");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Subscription failed.";
-      setStatus(message.replace(/^HTTP \\d+[^:]*:\\s*/i, "").toUpperCase());
+      const normalizedMessage = message.replace(/^HTTP \\d+[^:]*:\s*/i, "").trim();
+      const isHtmlResponse = /<!doctype html|<html[\\s>]/i.test(normalizedMessage);
+      setStatus(
+        isHtmlResponse
+          ? "SUBSCRIPTION SERVICE IS UNAVAILABLE. PLEASE TRY AGAIN AFTER THE APP PREVIEW RELOADS."
+          : normalizedMessage.toUpperCase(),
+      );
     } finally {
       setBusy(false);
     }
