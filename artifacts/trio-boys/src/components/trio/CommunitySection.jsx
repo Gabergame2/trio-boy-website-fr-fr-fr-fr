@@ -82,14 +82,21 @@ export default function CommunitySection() {
 
   async function handleSubscribe(event) {
     event.preventDefault();
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(normalizedEmail)) {
+      setStatus("ENTER A VALID EMAIL ADDRESS.");
+      return;
+    }
+
     setBusy(true);
     setStatus("");
     try {
-      await subscribeToNewsletter({ email });
+      await subscribeToNewsletter({ email: normalizedEmail });
       setStatus("YOU'RE IN. WATCH YOUR INBOX.");
       setEmail("");
-    } catch {
-      setStatus("TRY AGAIN WITH A VALID EMAIL.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Subscription failed.";
+      setStatus(message.replace(/^HTTP \\d+[^:]*:\\s*/i, "").toUpperCase());
     } finally {
       setBusy(false);
     }
