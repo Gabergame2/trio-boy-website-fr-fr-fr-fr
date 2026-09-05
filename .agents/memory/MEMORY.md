@@ -1,0 +1,1 @@
+- [Artifact workflow rebuilds](workflow-rebuilds.md) — API artifact workflows run a built bundle, so restart them after server-source changes.

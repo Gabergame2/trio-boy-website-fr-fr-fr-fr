@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Youtube, Instagram, Twitter, MessageCircle, Users, Heart, Zap, TrendingUp } from "lucide-react";
 import SectionNumber from "./SectionNumber";
 import GlitchDivider from "./GlitchDivider";
+import { useState } from "react";
+import { subscribeToNewsletter } from "@workspace/api-client-react";
 
 const SOCIAL_CARDS = [
   {
@@ -74,6 +76,25 @@ function SocialCard({ card, index }) {
 }
 
 export default function CommunitySection() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function handleSubscribe(event) {
+    event.preventDefault();
+    setBusy(true);
+    setStatus("");
+    try {
+      await subscribeToNewsletter({ email });
+      setStatus("YOU'RE IN. WATCH YOUR INBOX.");
+      setEmail("");
+    } catch {
+      setStatus("TRY AGAIN WITH A VALID EMAIL.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <section id="community" className="relative py-24 md:py-32">
       <SectionNumber number="04" />
@@ -148,16 +169,20 @@ export default function CommunitySection() {
           <p className="text-muted-foreground mb-6 text-sm">
             Join the inner circle. Early access to videos, merch, and exclusive content.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
               placeholder="YOUR EMAIL"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
               className="flex-1 bg-muted border border-border px-5 py-3.5 text-sm font-body tracking-wider placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary transition-colors"
             />
-            <button className="bg-primary text-primary-foreground px-8 py-3.5 text-sm font-bold tracking-[0.15em] hover:bg-accent hover:text-accent-foreground transition-colors duration-300 whitespace-nowrap">
-              JOIN NOW
+            <button disabled={busy} className="bg-primary text-primary-foreground px-8 py-3.5 text-sm font-bold tracking-[0.15em] hover:bg-accent hover:text-accent-foreground transition-colors duration-300 whitespace-nowrap disabled:opacity-50">
+              {busy ? "JOINING…" : "JOIN NOW"}
             </button>
-          </div>
+          </form>
+          {status && <p className="mt-4 text-xs font-bold tracking-[0.15em] text-primary">{status}</p>}
         </motion.div>
       </div>
     </section>

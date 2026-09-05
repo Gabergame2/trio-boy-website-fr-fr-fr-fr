@@ -3,9 +3,12 @@ import cors from "cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import { clerkMiddleware } from "@clerk/express";
+import { CLERK_PROXY_PATH, clerkProxyMiddleware } from "./middlewares/clerkProxyMiddleware";
 
 const app: Express = express();
 
+app.use(CLERK_PROXY_PATH, clerkProxyMiddleware());
 app.use(
   pinoHttp({
     logger,
@@ -25,7 +28,8 @@ app.use(
     },
   }),
 );
-app.use(cors());
+app.use(clerkMiddleware());
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

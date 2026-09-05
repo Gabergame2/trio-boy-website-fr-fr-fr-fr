@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: newsletter
+    description: Public newsletter subscription operations
+  - name: admin
+    description: Authenticated newsletter administration
 paths:
   /healthz:
     get:
@@ -24,7 +28,164 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /subscribe:
+    post:
+      operationId: subscribeToNewsletter
+      tags: [newsletter]
+      summary: Subscribe an email address
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriberInput"
+      responses:
+        "201":
+          description: Subscription created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscriber"
+        "400":
+          description: Invalid subscription
+  /admin/me:
+    get:
+      operationId: getAdminProfile
+      tags: [admin]
+      summary: Get the signed-in admin profile
+      responses:
+        "200":
+          description: Admin profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminProfile"
+        "401":
+          description: Authentication required
+        "403":
+          description: Admin access required
+  /admin/posts:
+    get:
+      operationId: listAdminPosts
+      tags: [admin]
+      summary: List newsletter posts
+      responses:
+        "200":
+          description: Newsletter posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Post"
+        "401":
+          description: Authentication required
+        "403":
+          description: Admin access required
+    post:
+      operationId: createAdminPost
+      tags: [admin]
+      summary: Create a newsletter post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostInput"
+      responses:
+        "201":
+          description: Created post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+  /admin/posts/{id}:
+    patch:
+      operationId: updateAdminPost
+      tags: [admin]
+      summary: Update a newsletter post
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostUpdate"
+      responses:
+        "200":
+          description: Updated post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "404":
+          description: Post not found
+    delete:
+      operationId: deleteAdminPost
+      tags: [admin]
+      summary: Delete a newsletter post
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      responses:
+        "204":
+          description: Deleted
+  /admin/posts/{id}/send:
+    post:
+      operationId: sendAdminPost
+      tags: [admin]
+      summary: Send a newsletter post to active subscribers
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      responses:
+        "200":
+          description: Send result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendResult"
+        "400":
+          description: No active subscribers or invalid post
+        "503":
+          description: Email delivery is not configured
+  /admin/subscribers:
+    get:
+      operationId: listAdminSubscribers
+      tags: [admin]
+      summary: List newsletter subscribers
+      responses:
+        "200":
+          description: Newsletter subscribers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subscriber"
+  /admin/subscribers/{id}:
+    delete:
+      operationId: removeAdminSubscriber
+      tags: [admin]
+      summary: Remove a newsletter subscriber
+      parameters:
+        - $ref: "#/components/parameters/SubscriberId"
+      responses:
+        "204":
+          description: Removed
 components:
+  parameters:
+    PostId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    SubscriberId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +194,62 @@ components:
           type: string
       required:
         - status
+    Post:
+      type: object
+      required: [id, title, body, status, createdAt, updatedAt]
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        excerpt: { type: ["string", "null"] }
+        body: { type: string }
+        coverImageUrl: { type: ["string", "null"] }
+        status: { type: string, enum: [draft, published] }
+        publishedAt: { type: ["string", "null"], format: date-time }
+        sentAt: { type: ["string", "null"], format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    PostInput:
+      type: object
+      required: [title, body]
+      properties:
+        title: { type: string, minLength: 1 }
+        excerpt: { type: string }
+        body: { type: string, minLength: 1 }
+        coverImageUrl: { type: string }
+        status: { type: string, enum: [draft, published] }
+    PostUpdate:
+      type: object
+      properties:
+        title: { type: string, minLength: 1 }
+        excerpt: { type: string }
+        body: { type: string, minLength: 1 }
+        coverImageUrl: { type: string }
+        status: { type: string, enum: [draft, published] }
+    Subscriber:
+      type: object
+      required: [id, email, status, subscribedAt]
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        status: { type: string, enum: [active, unsubscribed] }
+        subscribedAt: { type: string, format: date-time }
+        unsubscribedAt: { type: ["string", "null"], format: date-time }
+    SubscriberInput:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string }
+    AdminProfile:
+      type: object
+      required: [email, userId]
+      properties:
+        email: { type: string }
+        userId: { type: string }
+    SendResult:
+      type: object
+      required: [sent, failed, recipientCount]
+      properties:
+        sent: { type: integer }
+        failed: { type: integer }
+        recipientCount: { type: integer }
 
