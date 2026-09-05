@@ -76,7 +76,12 @@ function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
 function AdminDashboard({ profile, onLoggedOut }: { profile: { username: string }; onLoggedOut: () => void }) {
   const queryClient = useQueryClient();
   const { data: posts = [], isLoading: postsLoading } = useListAdminPosts();
-  const { data: subscribers = [], isLoading: subscribersLoading } = useListAdminSubscribers();
+  const { data: subscriberResponse, isLoading: subscribersLoading } = useListAdminSubscribers();
+  const subscribers = Array.isArray(subscriberResponse)
+    ? subscriberResponse
+    : Array.isArray((subscriberResponse as { data?: unknown[] } | undefined)?.data)
+      ? ((subscriberResponse as { data: unknown[] }).data)
+      : [];
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [draft, setDraft] = useState<Draft>(blankDraft);
   const [notice, setNotice] = useState("");
