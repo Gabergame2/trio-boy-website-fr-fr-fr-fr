@@ -1,5 +1,6 @@
 export * from "./content";
-// Export your models here. Add one export per file
+// Export your models here. Add one export per file.
+// Newsletter tables are defined in content.ts.
 // export * from "./posts";
 //
 // Each model/table should ideally be split into different files.
