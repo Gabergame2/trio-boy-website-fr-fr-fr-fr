@@ -6,7 +6,8 @@ import {
   SubscribeToNewsletterBody,
   UpdateAdminPostBody,
 } from "@workspace/api-zod";
-import { db, postsTable, subscribersTable } from "@workspace/db";
+import { db } from "@workspace/db";
+import { postsTable, subscribersTable } from "@workspace/db/schema";
 import {
   ADMIN_SESSION_COOKIE,
   ADMIN_USERNAME,
