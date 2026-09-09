@@ -1,4 +1,17 @@
-export * from "./content";
+export {
+  insertPostSchema,
+  insertSubscriberSchema,
+  postStatusSchema,
+  postsTable,
+  subscribersTable,
+} from "./content";
+export type {
+  InsertPost,
+  InsertSubscriber,
+  Post,
+  PostWithSubscriberCount,
+  Subscriber,
+} from "./content";
 // Export your models here. Add one export per file.
 // Newsletter tables are defined in content.ts.
 // export * from "./posts";
