@@ -96,7 +96,7 @@ export default function Navbar() {
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-accent group-hover:w-full transition-all duration-300" />
             </Link>
             <a
-              href="https://youtube.com"
+              href="https://youtube.com/@trioboysmedia?si=xixYrOaONuB9716M"
               target="_blank"
               rel="noopener noreferrer"
               className="ml-4 flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 text-sm font-bold tracking-wider hover:bg-accent hover:text-accent-foreground transition-colors duration-300"
@@ -158,7 +158,7 @@ export default function Navbar() {
             </motion.div>
 
             <motion.a
-              href="https://youtube.com"
+              href="https://youtube.com/@trioboysmedia?si=xixYrOaONuB9716M"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 flex items-center gap-3 bg-primary text-primary-foreground px-8 py-3 text-lg font-bold tracking-wider"

@@ -3,7 +3,7 @@ import React from "react";
 import { Youtube, Instagram, Twitter, MessageCircle, Download } from "lucide-react";
 
 const SOCIALS = [
-  { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
+  { icon: Youtube, href: "https://youtube.com/@trioboysmedia?si=xixYrOaONuB9716M", label: "YouTube" },
   { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
   { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
   { icon: MessageCircle, href: "https://discord.com", label: "Discord" },

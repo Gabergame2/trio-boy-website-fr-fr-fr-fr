@@ -163,7 +163,7 @@ export default function VideoFeed() {
           viewport={{ once: true }}
         >
           <a
-            href="https://youtube.com"
+            href="https://youtube.com/@trioboysmedia?si=xixYrOaONuB9716M"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-3 text-sm font-body tracking-[0.2em] uppercase text-muted-foreground hover:text-primary transition-colors"

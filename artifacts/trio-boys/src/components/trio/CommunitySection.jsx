@@ -13,7 +13,7 @@ const SOCIAL_CARDS = [
     stat: "2.1M",
     label: "SUBSCRIBERS",
     color: "bg-red-500/10 text-red-400 border-red-500/20",
-    link: "https://youtube.com",
+    link: "https://youtube.com/@trioboysmedia?si=xixYrOaONuB9716M",
   },
   {
     platform: "INSTAGRAM",
