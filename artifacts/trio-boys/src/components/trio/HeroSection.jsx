@@ -212,7 +212,7 @@ export default function HeroSection() {
       </div>
 
       {/* ── MOBILE: 2-column portrait grid ── */}
-      <div className="md:hidden flex-1 px-3 pt-24 pb-4 grid grid-cols-2 gap-3 relative z-10 auto-rows-fr">
+      <div className="md:hidden flex-1 px-3 pt-32 pb-4 grid grid-cols-2 gap-3 relative z-10 auto-rows-fr">
             {MEMBERS.map((member, i) => (
           <div
             key={member.name}
