@@ -37937,10 +37937,12 @@ var RemoveAdminSubscriberResponse = voidType();
 
 // src/routes/health.ts
 var router = (0, import_express.Router)();
-router.get("/healthz", (_req, res) => {
+function healthHandler(_req, res) {
   const data = HealthCheckResponse.parse({ status: "ok" });
   res.json(data);
-});
+}
+router.get("/healthz", healthHandler);
+router.get("/health", healthHandler);
 var health_default = router;
 
 // src/routes/newsletter.ts
@@ -56657,6 +56659,11 @@ app.use((0, import_cookie_parser.default)(process.env.SESSION_SECRET));
 app.use(import_express4.default.json());
 app.use(import_express4.default.urlencoded({ extended: true }));
 app.use("/api", routes_default);
+app.use((error40, _req, res, _next) => {
+  const message = error40 instanceof Error ? error40.message : "Internal server error";
+  if (res.headersSent) return;
+  res.status(500).json({ error: message });
+});
 var app_default = app;
 
 // src/index.ts
