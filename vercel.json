@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm --filter @workspace/trio-boys run build",
+  "outputDirectory": "artifacts/trio-boys/public",
+  "framework": "vite"
+}
