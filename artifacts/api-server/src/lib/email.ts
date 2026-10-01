@@ -1,6 +1,4 @@
-import { ReplitConnectors } from "@replit/connectors-sdk";
-
-const connectors = new ReplitConnectors();
+import nodemailer from "nodemailer";
 
 function escapeHtml(value: string) {
   return value
@@ -27,24 +25,36 @@ export async function sendPostEmail(
   to: string,
   post: { title: string; excerpt?: string | null; body: string; coverImageUrl?: string | null },
 ) {
-  const from = process.env.RESEND_FROM_EMAIL?.trim();
-  if (!from) {
-    throw new Error("RESEND_FROM_EMAIL is not configured");
+  const host = process.env.SMTP_HOST?.trim();
+  const port = Number.parseInt(process.env.SMTP_PORT ?? "587", 10);
+  const user = process.env.SMTP_USER?.trim();
+  const password = process.env.SMTP_PASSWORD?.trim();
+  const from = (process.env.SMTP_FROM_EMAIL ?? "Info@trioboys.com").trim();
+
+  if (!host || !user || !password || !Number.isFinite(port)) {
+    throw new Error("SMTP email is not configured. Check SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASSWORD.");
+  }
+  if (!from.includes("@")) {
+    throw new Error("SMTP_FROM_EMAIL must be a valid sender address.");
   }
 
-  const response = await connectors.proxy("resend", "/emails", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
+    auth: { user, pass: password },
+  });
+
+  try {
+    await transporter.sendMail({
       from,
-      to: [to],
+      to,
       subject: post.title,
       html: renderPostHtml(post),
       text: post.body,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Resend returned ${response.status}: ${await response.text()}`);
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown SMTP error";
+    throw new Error(`SMTP rejected the email: ${message}`);
   }
 }

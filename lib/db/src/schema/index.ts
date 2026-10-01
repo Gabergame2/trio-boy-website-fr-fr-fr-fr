@@ -1,5 +1,19 @@
-export * from "./content";
-// Export your models here. Add one export per file
+export {
+  insertPostSchema,
+  insertSubscriberSchema,
+  postStatusSchema,
+  postsTable,
+  subscribersTable,
+} from "./content";
+export type {
+  InsertPost,
+  InsertSubscriber,
+  Post,
+  PostWithSubscriberCount,
+  Subscriber,
+} from "./content";
+// Export your models here. Add one export per file.
+// Newsletter tables are defined in content.ts.
 // export * from "./posts";
 //
 // Each model/table should ideally be split into different files.
@@ -18,4 +32,3 @@ export * from "./content";
 //   export type InsertPost = z.infer<typeof insertPostSchema>;
 //   export type Post = typeof postsTable.$inferSelect;
 
-export {}
