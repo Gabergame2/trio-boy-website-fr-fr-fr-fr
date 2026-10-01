@@ -58,7 +58,7 @@ export default function Navbar() {
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
           <Link
             to="/"
             onClick={handleHomeClick}
@@ -96,7 +96,7 @@ export default function Navbar() {
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-accent group-hover:w-full transition-all duration-300" />
             </Link>
             <a
-              href="https://youtube.com"
+              href="https://youtube.com/@trioboysmedia?si=xixYrOaONuB9716M"
               target="_blank"
               rel="noopener noreferrer"
               className="ml-4 flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 text-sm font-bold tracking-wider hover:bg-accent hover:text-accent-foreground transition-colors duration-300"
@@ -123,7 +123,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8"
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-start gap-8 pt-32 pb-10 overflow-y-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -158,7 +158,7 @@ export default function Navbar() {
             </motion.div>
 
             <motion.a
-              href="https://youtube.com"
+              href="https://youtube.com/@trioboysmedia?si=xixYrOaONuB9716M"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-4 flex items-center gap-3 bg-primary text-primary-foreground px-8 py-3 text-lg font-bold tracking-wider"
