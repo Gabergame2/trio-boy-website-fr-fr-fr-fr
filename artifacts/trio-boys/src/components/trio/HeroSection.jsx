@@ -3,6 +3,41 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import MediaVault from "./MediaVault";
 
+const AIDEN_STORY = {
+  title: "Navigating Eighth Grade: The Power of the Trio",
+  subtitle: "A narrative reflection on friendship, identity, and growing up",
+  sections: [
+    {
+      heading: "The Architecture of a Middle School Trio",
+      paragraphs: [
+        "Thirteen is an age suspended in transition. It sits precisely on the narrow bridge between childhood and adolescence, where voices begin to change, sneakers need replacing every few months, and high school looms just across the horizon. For an eighth-grade boy, this period can feel like navigating a complex maze without a map. However, the weight of middle school becomes remarkably lighter when shared with a tight-knit circle—a core trio of friends who turn every day into a shared adventure.",
+        "In middle school, friendships are rarely accidental; they are built on a foundation of shared halls, mutual interests, and an unspoken pact of loyalty. Each member brings a distinct personality to the dynamic: the strategist, the energy, and the anchor. Together, they form a complete ecosystem. Where one lacks confidence, the others supply it; where one stumbles, the remaining two step in to steady the line.",
+      ],
+    },
+    {
+      heading: "Daily Life in the Eighth-Grade Hallways",
+      paragraphs: [
+        "Eighth grade carries a unique atmosphere. As the oldest students in the middle school building, there is a subtle sense of ownership over the hallways, balanced by the quiet anxiety of soon becoming freshmen at the bottom of the ladder once more.",
+        "For the trio, a typical day is structured around small, meaningful routines: morning lockers, lunch at their usual corner table, trading snacks, debating sports statistics, and planning the weekend. Even mundane moments become memorable when tackled together.",
+      ],
+    },
+    {
+      heading: "Beyond the Bell: Life Outside Classroom Walls",
+      paragraphs: [
+        "The true strength of the trio reveals itself after three o'clock. Autumn afternoons are spent riding bikes through neighborhood streets until dusk, while winter weekends are consumed by shared gaming sessions and makeshift driveway basketball games.",
+        "Within the safety of their group, there is no need to pretend or put on a tough exterior; they can simply be thirteen.",
+      ],
+    },
+    {
+      heading: "The Importance of Brotherhood at Thirteen",
+      paragraphs: [
+        "Growing up is rarely linear. Eighth grade brings unexpected shifts in identity, interests, and confidence. Yet, having a dedicated group of friends transforms these potential hurdles into milestones.",
+        "The bonds formed during this pivotal year provide a crucial sense of belonging. No matter how complex the road ahead becomes, no one has to walk it alone.",
+      ],
+    },
+  ],
+};
+
 const MEMBERS = [
   { name: "GABE",    role: "OG TRIO · FOUNDER", image: "/members/1.png" },
   { name: "PRESTON", role: "OG TRIO · FOUNDER", image: "/members/2.png" },
@@ -38,7 +73,7 @@ function HoldIndicator({ progress }) {
   );
 }
 
-function MobileCard({ member, i, holdProgress = 0, onHoldStart, onHoldEnd }) {
+function MobileCard({ member, i, holdProgress = 0, onHoldStart, onHoldEnd, onSelect }) {
   return (
     <motion.div
       className="relative overflow-hidden rounded-lg"
@@ -46,6 +81,7 @@ function MobileCard({ member, i, holdProgress = 0, onHoldStart, onHoldEnd }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: i * 0.07, duration: 0.45, ease: "easeOut" }}
+      onClick={member.name === "AIDEN" ? onSelect : undefined}
       onPointerDown={member.name === "GABE" ? onHoldStart : undefined}
       onPointerUp={member.name === "GABE" ? onHoldEnd : undefined}
       onPointerLeave={member.name === "GABE" ? onHoldEnd : undefined}
@@ -93,6 +129,7 @@ function DesktopPanel({
   holdProgress = 0,
   onHoldStart,
   onHoldEnd,
+  onSelect,
 }) {
   return (
     <motion.div
@@ -100,6 +137,7 @@ function DesktopPanel({
       className="relative flex-1 cursor-pointer overflow-hidden group"
       onMouseEnter={() => setActiveIndex(i)}
       onMouseLeave={() => setActiveIndex(null)}
+      onClick={member.name === "AIDEN" ? onSelect : undefined}
       onPointerDown={member.name === "GABE" ? onHoldStart : undefined}
       onPointerUp={member.name === "GABE" ? onHoldEnd : undefined}
       onPointerCancel={member.name === "GABE" ? onHoldEnd : undefined}
@@ -160,6 +198,7 @@ export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [holdProgress, setHoldProgress] = useState(0);
   const [vaultOpen, setVaultOpen] = useState(false);
+  const [aidenStoryOpen, setAidenStoryOpen] = useState(false);
   const holdTimer = useRef(null);
   const holdProgressTimer = useRef(null);
 
@@ -230,6 +269,7 @@ export default function HeroSection() {
                     holdProgress={member.name === "GABE" ? holdProgress : 0}
                     onHoldStart={startGabeHold}
                     onHoldEnd={endGabeHold}
+                    onSelect={() => setAidenStoryOpen(true)}
                   />
               </div>
             ) : (
@@ -257,6 +297,7 @@ export default function HeroSection() {
               holdProgress={member.name === "GABE" ? holdProgress : 0}
               onHoldStart={startGabeHold}
               onHoldEnd={endGabeHold}
+              onSelect={() => setAidenStoryOpen(true)}
           />
         ))}
       </div>
@@ -280,6 +321,49 @@ export default function HeroSection() {
         </motion.button>
       </motion.div>
       </section>
+      <AnimatePresence>
+        {aidenStoryOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-md"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="aiden-story-title"
+            onClick={() => setAidenStoryOpen(false)}
+          >
+            <motion.article
+              className="relative max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-primary/30 bg-card p-6 shadow-2xl md:p-10"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.98 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setAidenStoryOpen(false)}
+                className="absolute right-4 top-4 rounded-full px-3 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                aria-label="Close Aiden story"
+              >
+                Close
+              </button>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-primary">Aiden · 7th Grade Trio</p>
+              <h2 id="aiden-story-title" className="max-w-2xl pr-16 font-display text-3xl font-black uppercase leading-tight md:text-5xl">
+                {AIDEN_STORY.title}
+              </h2>
+              <p className="mt-3 text-sm italic text-muted-foreground">{AIDEN_STORY.subtitle}</p>
+              <div className="mt-8 space-y-8">
+                {AIDEN_STORY.sections.map((section) => (
+                  <section key={section.heading}>
+                    <h3 className="mb-3 font-display text-xl font-bold uppercase text-primary">{section.heading}</h3>
+                    <div className="space-y-3 text-sm leading-7 text-foreground/85 md:text-base">
+                      {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            </motion.article>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <MediaVault open={vaultOpen} onClose={closeVault} />
     </>
   );
