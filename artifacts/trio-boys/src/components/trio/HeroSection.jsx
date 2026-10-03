@@ -3,40 +3,39 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import MediaVault from "./MediaVault";
 
-const AIDEN_STORY = {
-  title: "Navigating Eighth Grade: The Power of the Trio",
-  subtitle: "A narrative reflection on friendship, identity, and growing up",
-  sections: [
-    {
-      heading: "The Architecture of a Middle School Trio",
-      paragraphs: [
-        "Thirteen is an age suspended in transition. It sits precisely on the narrow bridge between childhood and adolescence, where voices begin to change, sneakers need replacing every few months, and high school looms just across the horizon. For an eighth-grade boy, this period can feel like navigating a complex maze without a map. However, the weight of middle school becomes remarkably lighter when shared with a tight-knit circle—a core trio of friends who turn every day into a shared adventure.",
-        "In middle school, friendships are rarely accidental; they are built on a foundation of shared halls, mutual interests, and an unspoken pact of loyalty. Each member brings a distinct personality to the dynamic: the strategist, the energy, and the anchor. Together, they form a complete ecosystem. Where one lacks confidence, the others supply it; where one stumbles, the remaining two step in to steady the line.",
-      ],
-    },
-    {
-      heading: "Daily Life in the Eighth-Grade Hallways",
-      paragraphs: [
-        "Eighth grade carries a unique atmosphere. As the oldest students in the middle school building, there is a subtle sense of ownership over the hallways, balanced by the quiet anxiety of soon becoming freshmen at the bottom of the ladder once more.",
-        "For the trio, a typical day is structured around small, meaningful routines: morning lockers, lunch at their usual corner table, trading snacks, debating sports statistics, and planning the weekend. Even mundane moments become memorable when tackled together.",
-      ],
-    },
-    {
-      heading: "Beyond the Bell: Life Outside Classroom Walls",
-      paragraphs: [
-        "The true strength of the trio reveals itself after three o'clock. Autumn afternoons are spent riding bikes through neighborhood streets until dusk, while winter weekends are consumed by shared gaming sessions and makeshift driveway basketball games.",
-        "Within the safety of their group, there is no need to pretend or put on a tough exterior; they can simply be thirteen.",
-      ],
-    },
-    {
-      heading: "The Importance of Brotherhood at Thirteen",
-      paragraphs: [
-        "Growing up is rarely linear. Eighth grade brings unexpected shifts in identity, interests, and confidence. Yet, having a dedicated group of friends transforms these potential hurdles into milestones.",
-        "The bonds formed during this pivotal year provide a crucial sense of belonging. No matter how complex the road ahead becomes, no one has to walk it alone.",
-      ],
-    },
-  ],
-};
+const AIDEN_STORY = `Navigating Eighth Grade: The Power of the Trio
+A Narrative Reflection on Friendship, Identity, and Growing Up
+
+Thirteen is an age suspended in transition. It sits precisely on the narrow bridge between childhood and adolescence, where voices begin to change, sneakers need replacing every few months, and high school loom just across the horizon. For an eighth-grade boy, this period can feel like navigating a complex maze without a map. However, the weight of middle school becomes remarkably lighter when shared with a tight-knit circle—a core trio of friends who turn every day into a shared adventure.
+The Architecture of a Middle School Trio
+In middle school, friendships are rarely accidental; they are built on a foundation of shared halls, mutual interests, and a unspoken pact of loyalty. For thirteen-year-old Leo and his two closest friends, Marcus and Julian, the group forms an unbreakable unit that classmates simply refer to as "the trio." Each member brings a distinct personality to the dynamic:
+
+The Strategist: Julian is the thinker—the one who remembers project due dates, analyzes game tactics, and keeps the group grounded when ideas get wildly out of hand.
+The Energy: Marcus provides the endless momentum—quick with a joke, always pushing to stay out ten minutes past the streetlights turning on, and incapable of sitting still.
+The Anchor: Leo binds the two worlds together, serving as the reliable balance between Julian’s caution and Marcus’s impulse.
+
+Together, the three boys form a complete ecosystem. Where one lacks confidence, the others supply it; where one stumbles, the remaining two step in to steady the line.
+Daily Life in the Eighth-Grade Hallways
+Eighth grade carries a unique atmosphere. As the oldest students in the middle school building, there is a subtle sense of ownership over the hallways, balanced by the quiet anxiety of soon becoming freshmen at the bottom of the ladder once more.
+
+For the trio, a typical day is structured around small, meaningful routines. It begins at the morning lockers—a chaotic flurry of jammed zippers, misplaced homework assignments, and quick recaps of last night’s video game matches. Lunchtime is spent claims their usual corner table, trading snacks, debating sports statistics, and plotting plans for the weekend. Even mundane moments, like walking to science lab or surviving a difficult gym class fitness test, become memorable when tackled together.
+Beyond the Bell: Life Outside Classroom Walls
+The true strength of the trio, however, reveals itself after three o'clock. Once the final bell rings, the pressures of grades and expectations fade away. Autumn afternoons are spent riding bikes through neighborhood streets until dusk, while winter weekends are consumed by shared gaming sessions and makeshift driveway basketball games.
+
+It is during these informal hours that the boys navigate the subtle challenges of growing up. They discuss the awkwardness of changing expectations at home, the stress of upcoming exams, and the mysterious unspoken rules of teenage social life. Within the safety of their group, there is no need to pretend or put on a tough exterior; they can simply be thirteen.
+The Importance of Brotherhood at Thirteen
+Growing up is rarely linear. Eighth grade brings unexpected shifts in identity, interests, and confidence. Yet, having a dedicated group of friends transforms these potential hurdles into milestones. The bonds formed during this pivotal year provide a crucial sense of belonging when everything else seems to be changing.
+
+As the school year progresses toward graduation, the trio knows that high school will bring new classes, different schedules, and expanding social circles. But the foundation built in eighth grade remains firm. The experiences shared by these three boys—the laughter, the quiet support, and the everyday adventures—serve as a reminder that no matter how complex the road ahead becomes, no one has to walk it alone.
+
+The essay is a narrative about three 13-year-old eighth-grade boys—Leo, Marcus, and Julian—who form a close-knit friendship group known as "the trio."
+
+Here is the short summary:
+The Dynamic: Each boy brings a different strength (strategy, energy, and balance) that helps them support each other through the challenges of middle school.
+Daily Life: They share everything from morning locker chaos and lunch tables to after-school bike rides and gaming sessions.
+Growing Up: Their friendship provides a safe space to navigate the awkward changes, pressures, and transitions of turning thirteen.
+The Takeaway: The strong bonds formed in eighth grade give them the confidence to face high school and whatever comes next together.
+Would you like me to make any specific adjustments or focus on a particular section?`;
 
 const MEMBERS = [
   { name: "GABE",    role: "OG TRIO · FOUNDER", image: "/members/1.png" },
@@ -346,20 +345,8 @@ export default function HeroSection() {
                 Close
               </button>
               <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-primary">Aiden · 7th Grade Trio</p>
-              <h2 id="aiden-story-title" className="max-w-2xl pr-16 font-display text-3xl font-black uppercase leading-tight md:text-5xl">
-                {AIDEN_STORY.title}
-              </h2>
-              <p className="mt-3 text-sm italic text-muted-foreground">{AIDEN_STORY.subtitle}</p>
-              <div className="mt-8 space-y-8">
-                {AIDEN_STORY.sections.map((section) => (
-                  <section key={section.heading}>
-                    <h3 className="mb-3 font-display text-xl font-bold uppercase text-primary">{section.heading}</h3>
-                    <div className="space-y-3 text-sm leading-7 text-foreground/85 md:text-base">
-                      {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                    </div>
-                  </section>
-                ))}
-              </div>
+              <h2 id="aiden-story-title" className="sr-only">Aiden&apos;s story</h2>
+              <div className="mt-8 whitespace-pre-wrap text-sm leading-7 text-foreground/85 md:text-base">{AIDEN_STORY}</div>
             </motion.article>
           </motion.div>
         )}
