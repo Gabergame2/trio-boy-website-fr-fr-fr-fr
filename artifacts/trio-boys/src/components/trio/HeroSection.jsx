@@ -3,6 +3,48 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import MediaVault from "./MediaVault";
 
+const AIDEN_STORY = `Navigating Eighth Grade: The Power of the Trio
+A Narrative Reflection on Friendship, Identity, and Growing Up
+
+Thirteen is an age suspended in transition. It sits precisely on the narrow bridge between childhood and adolescence, where voices begin to change, sneakers need replacing every few months, and high school loom just across the horizon. For an eighth-grade boy, this period can feel like navigating a complex maze without a map. However, the weight of middle school becomes remarkably lighter when shared with a tight-knit circle—a core trio of friends who turn every day into a shared adventure.
+The Architecture of a Middle School Trio
+In middle school, friendships are rarely accidental; they are built on a foundation of shared halls, mutual interests, and a unspoken pact of loyalty. For thirteen-year-old Leo and his two closest friends, Marcus and Julian, the group forms an unbreakable unit that classmates simply refer to as "the trio." Each member brings a distinct personality to the dynamic:
+
+The Strategist: Julian is the thinker—the one who remembers project due dates, analyzes game tactics, and keeps the group grounded when ideas get wildly out of hand.
+The Energy: Marcus provides the endless momentum—quick with a joke, always pushing to stay out ten minutes past the streetlights turning on, and incapable of sitting still.
+The Anchor: Leo binds the two worlds together, serving as the reliable balance between Julian’s caution and Marcus’s impulse.
+
+Together, the three boys form a complete ecosystem. Where one lacks confidence, the others supply it; where one stumbles, the remaining two step in to steady the line.
+Daily Life in the Eighth-Grade Hallways
+Eighth grade carries a unique atmosphere. As the oldest students in the middle school building, there is a subtle sense of ownership over the hallways, balanced by the quiet anxiety of soon becoming freshmen at the bottom of the ladder once more.
+
+For the trio, a typical day is structured around small, meaningful routines. It begins at the morning lockers—a chaotic flurry of jammed zippers, misplaced homework assignments, and quick recaps of last night’s video game matches. Lunchtime is spent claims their usual corner table, trading snacks, debating sports statistics, and plotting plans for the weekend. Even mundane moments, like walking to science lab or surviving a difficult gym class fitness test, become memorable when tackled together.
+Beyond the Bell: Life Outside Classroom Walls
+The true strength of the trio, however, reveals itself after three o'clock. Once the final bell rings, the pressures of grades and expectations fade away. Autumn afternoons are spent riding bikes through neighborhood streets until dusk, while winter weekends are consumed by shared gaming sessions and makeshift driveway basketball games.
+
+It is during these informal hours that the boys navigate the subtle challenges of growing up. They discuss the awkwardness of changing expectations at home, the stress of upcoming exams, and the mysterious unspoken rules of teenage social life. Within the safety of their group, there is no need to pretend or put on a tough exterior; they can simply be thirteen.
+The Importance of Brotherhood at Thirteen
+Growing up is rarely linear. Eighth grade brings unexpected shifts in identity, interests, and confidence. Yet, having a dedicated group of friends transforms these potential hurdles into milestones. The bonds formed during this pivotal year provide a crucial sense of belonging when everything else seems to be changing.
+
+As the school year progresses toward graduation, the trio knows that high school will bring new classes, different schedules, and expanding social circles. But the foundation built in eighth grade remains firm. The experiences shared by these three boys—the laughter, the quiet support, and the everyday adventures—serve as a reminder that no matter how complex the road ahead becomes, no one has to walk it alone.
+
+
+
+Hi im aids/aiden/gucci morty/pissmaster/edtechhatr/public offender/garylambert/danial larson/rickprime/recrouser/epstein associate/lake chargoggagoggmanchauggagoggchaubunagungamaugg
+
+Yea thats it
+
+Back to the cesspool now ahahaha - gabergamew22222
+
+The essay is a narrative about three 13-year-old eighth-grade boys—Leo, Marcus, and Julian—who form a close-knit friendship group known as "the trio."
+
+Here is the short summary:
+The Dynamic: Each boy brings a different strength (strategy, energy, and balance) that helps them support each other through the challenges of middle school.
+Daily Life: They share everything from morning locker chaos and lunch tables to after-school bike rides and gaming sessions.
+Growing Up: Their friendship provides a safe space to navigate the awkward changes, pressures, and transitions of turning thirteen.
+The Takeaway: The strong bonds formed in eighth grade give them the confidence to face high school and whatever comes next together.
+Would you like me to make any specific adjustments or focus on a particular section?`;
+
 const MEMBERS = [
   { name: "GABE",    role: "OG TRIO · FOUNDER", image: "/members/1.png" },
   { name: "PRESTON", role: "OG TRIO · FOUNDER", image: "/members/2.png" },
@@ -11,6 +53,7 @@ const MEMBERS = [
   { name: "CONNOR",  role: "4TH GRADE TRIO",    image: "/members/5.png" },
   { name: "DOM",     role: "4TH GRADE TRIO",    image: "/members/6.png" },
   { name: "WYATT",   role: "6TH GRADE TRIO",    image: "/members/7.png" },
+  { name: "AIDEN",   role: "7TH GRADE TRIO",    image: "/members/aiden.png" },
 ];
 
 /* ─── Mobile card ──────────────────────────────────────────────── */
@@ -37,7 +80,7 @@ function HoldIndicator({ progress }) {
   );
 }
 
-function MobileCard({ member, i, holdProgress = 0, onHoldStart, onHoldEnd }) {
+function MobileCard({ member, i, holdProgress = 0, onHoldStart, onHoldEnd, onSelect }) {
   return (
     <motion.div
       className="relative overflow-hidden rounded-lg"
@@ -45,6 +88,7 @@ function MobileCard({ member, i, holdProgress = 0, onHoldStart, onHoldEnd }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: i * 0.07, duration: 0.45, ease: "easeOut" }}
+      onClick={member.name === "AIDEN" ? onSelect : undefined}
       onPointerDown={member.name === "GABE" ? onHoldStart : undefined}
       onPointerUp={member.name === "GABE" ? onHoldEnd : undefined}
       onPointerLeave={member.name === "GABE" ? onHoldEnd : undefined}
@@ -92,6 +136,7 @@ function DesktopPanel({
   holdProgress = 0,
   onHoldStart,
   onHoldEnd,
+  onSelect,
 }) {
   return (
     <motion.div
@@ -99,6 +144,7 @@ function DesktopPanel({
       className="relative flex-1 cursor-pointer overflow-hidden group"
       onMouseEnter={() => setActiveIndex(i)}
       onMouseLeave={() => setActiveIndex(null)}
+      onClick={member.name === "AIDEN" ? onSelect : undefined}
       onPointerDown={member.name === "GABE" ? onHoldStart : undefined}
       onPointerUp={member.name === "GABE" ? onHoldEnd : undefined}
       onPointerCancel={member.name === "GABE" ? onHoldEnd : undefined}
@@ -159,6 +205,7 @@ export default function HeroSection() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [holdProgress, setHoldProgress] = useState(0);
   const [vaultOpen, setVaultOpen] = useState(false);
+  const [aidenStoryOpen, setAidenStoryOpen] = useState(false);
   const holdTimer = useRef(null);
   const holdProgressTimer = useRef(null);
 
@@ -229,6 +276,7 @@ export default function HeroSection() {
                     holdProgress={member.name === "GABE" ? holdProgress : 0}
                     onHoldStart={startGabeHold}
                     onHoldEnd={endGabeHold}
+                    onSelect={() => setAidenStoryOpen(true)}
                   />
               </div>
             ) : (
@@ -256,6 +304,7 @@ export default function HeroSection() {
               holdProgress={member.name === "GABE" ? holdProgress : 0}
               onHoldStart={startGabeHold}
               onHoldEnd={endGabeHold}
+              onSelect={() => setAidenStoryOpen(true)}
           />
         ))}
       </div>
@@ -279,6 +328,37 @@ export default function HeroSection() {
         </motion.button>
       </motion.div>
       </section>
+      <AnimatePresence>
+        {aidenStoryOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-md"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="aiden-story-title"
+            onClick={() => setAidenStoryOpen(false)}
+          >
+            <motion.article
+              className="relative max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-primary/30 bg-card p-6 shadow-2xl md:p-10"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.98 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setAidenStoryOpen(false)}
+                className="absolute right-4 top-4 rounded-full px-3 py-1 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+                aria-label="Close Aiden story"
+              >
+                Close
+              </button>
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-primary">Aiden · 7th Grade Trio</p>
+              <h2 id="aiden-story-title" className="sr-only">Aiden&apos;s story</h2>
+              <div className="mt-8 whitespace-pre-wrap text-sm leading-7 text-foreground/85 md:text-base">{AIDEN_STORY}</div>
+            </motion.article>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <MediaVault open={vaultOpen} onClose={closeVault} />
     </>
   );
