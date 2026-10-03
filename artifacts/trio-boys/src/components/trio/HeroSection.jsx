@@ -11,6 +11,7 @@ const MEMBERS = [
   { name: "CONNOR",  role: "4TH GRADE TRIO",    image: "/members/5.png" },
   { name: "DOM",     role: "4TH GRADE TRIO",    image: "/members/6.png" },
   { name: "WYATT",   role: "6TH GRADE TRIO",    image: "/members/7.png" },
+  { name: "AIDEN",   role: "7TH GRADE TRIO",    image: "/members/aiden.png" },
 ];
 
 /* ─── Mobile card ──────────────────────────────────────────────── */
